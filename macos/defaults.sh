@@ -30,6 +30,9 @@ sudo nvram SystemAudioVolume=" "
 # Menu bar: disable transparency
 defaults write com.apple.universalaccess reduceTransparency -bool true
 
+# Menu bar: show battery percentage
+defaults write com.apple.menuextra.battery ShowPercent YES
+
 # Disable opening and closing window animations
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 
@@ -74,10 +77,8 @@ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
-# Disable smart quotes as they’re annoying when typing code
+# Disable smart quotes and dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-
-# Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
 # Disable auto-correct
