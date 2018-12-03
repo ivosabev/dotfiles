@@ -57,16 +57,19 @@ fi
 unset READLINK CURRENT_SCRIPT SCRIPT_PATH DOTFILE EXTRAFILE
 
 # CUSTOM
+
 ANDROID_HOME=~/Library/Android/sdk
 ANDROID_SDK_ROOT=~/Library/Android/sdk
 NODE_ENV="development"
+GITHUB_AUTH=""
 
 # Export
 
-export DOTFILES_DIR DOTFILES_EXTRA_DIR ANDROID_HOME NODE_ENV
-
-export ANDROID_HOME
+export DOTFILES_DIR DOTFILES_EXTRA_DIR ANDROID_HOME ANDROID_SDK_ROOT NODE_ENV GITHUB_AUTH
 
 # PHP
+
 export PATH="/usr/local/opt/php@7.1/bin:$PATH"
 export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
