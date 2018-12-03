@@ -19,6 +19,7 @@ apps=(
   gnu-sed --with-default-names
   grep --with-default-names
   imagemagick
+  m-cli
   mackup
   mariadb
   postgresql@9.6
