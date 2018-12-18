@@ -338,6 +338,16 @@ defaults write com.apple.dock wvous-tr-corner -int 0
 defaults write com.apple.dock wvous-bl-corner -int 0
 defaults write com.apple.dock wvous-br-corner -int 0
 
+# Disable includings results from trash in search
+defaults write com.apple.mail IndexTrash -bool false
+
+# Automatically check for new message (not every 5 minutes)
+defaults write com.apple.mail AutoFetch -bool true
+defaults write com.apple.mail PollTime -string "-1"
+
+# Show most recent message at the top in conversations
+defaults write com.apple.mail ConversationViewSortDescending -bool true
+
 ###############################################################################
 # Calendar                                                                    #
 ###############################################################################
