@@ -4,16 +4,16 @@
 is-executable getconf && PATH=$($(command -v getconf) PATH)
 
 # Prepend new items to path (if directory exists)
+
 prepend-path "/bin"
 prepend-path "/usr/bin"
+prepend-path "/usr/local/bin"
 prepend-path "/usr/local/opt/coreutils/libexec/gnubin"
 prepend-path "$DOTFILES_DIR/bin"
 prepend-path "$HOME/bin"
 prepend-path "/sbin"
 prepend-path "/usr/sbin"
-prepend-path "/usr/local/bin"
 prepend-path "/usr/local/sbin"
-
 
 # Custom
 prepend-path "/usr/local/Cellar/postgresql@9.6/9.6.9/bin"
