@@ -168,9 +168,6 @@ sudo systemsetup -settimezone "Europe/Sofia" > /dev/null
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-# Stop iTunes from responding to the keyboard media keys
-launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-
 ###############################################################################
 # Screen                                                                      #
 ###############################################################################
@@ -317,50 +314,11 @@ defaults write com.apple.dock no-bouncing -bool true
 # the Dock to launch apps.
 defaults write com.apple.dock persistent-apps -array
 
-###############################################################################
-# Dashboard                                                                   #
-###############################################################################
-
-# Speed up Mission Control animations
-defaults write com.apple.dock expose-animation-duration -float 0.1
-
-# Disable Dashboard
-# defaults write com.apple.dashboard mcx-disabled -bool true
-
-# Don’t show Dashboard as a Space
-# defaults write com.apple.dock dashboard-in-overlay -bool true
-
-###############################################################################
-# Hot corners                                                                 #
-###############################################################################
-
-# Possible values:
-# 0: no-op
-# 2: Mission Control
-# 3: Show application windows
-# 4: Desktop
-# 5: Start screen saver
-# 6: Disable screen saver
-# 7: Dashboard
-# 10: Put display to sleep
-# 11: Launchpad
-# 12: Notification Center
-
-# Top left screen corner
-# defaults write com.apple.dock wvous-tl-corner -int 0
-# defaults write com.apple.dock wvous-tl-modifier -int 0
-
-# # Top right screen corner
-# defaults write com.apple.dock wvous-tr-corner -int 0
-# defaults write com.apple.dock wvous-tr-modifier -int 0
-
-# # Bottom left screen corner → Display to sleep
-# defaults write com.apple.dock wvous-bl-corner -int 10
-# defaults write com.apple.dock wvous-bl-modifier -int 0
-
-# # Bottom right screen corner
-# defaults write com.apple.dock wvous-br-corner -int 0
-# defaults write com.apple.dock wvous-br-modifier -int 0
+# Disable hot corners
+defaults write com.apple.dock wvous-tl-corner -int 0
+defaults write com.apple.dock wvous-tr-corner -int 0
+defaults write com.apple.dock wvous-bl-corner -int 0
+defaults write com.apple.dock wvous-br-corner -int 0
 
 ###############################################################################
 # Calendar                                                                    #
@@ -371,7 +329,7 @@ defaults write com.apple.iCal "Show Week Numbers" -bool true
 
 # Week starts on monday
 defaults write com.apple.iCal "first day of week" -int 1
- 
+
 ###############################################################################
 # Spotlight                                                                   #
 ###############################################################################
@@ -460,14 +418,8 @@ defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
 defaults write com.apple.ActivityMonitor SortDirection -int 0
 
 ###############################################################################
-# Mac App Store                                                               #
+# Software Updates                                                            #
 ###############################################################################
-
-# Enable the WebKit Developer Tools in the Mac App Store
-defaults write com.apple.appstore WebKitDeveloperExtras -bool true
-
-# Enable Debug Menu in the Mac App Store
-defaults write com.apple.appstore ShowDebugMenu -bool true
 
 # Enable the automatic update check
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
