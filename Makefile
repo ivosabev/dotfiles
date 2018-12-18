@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 DOTFILES_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
-OS := $(shell bin/is-supported is-macos macos linux)
+OS := $(shell bin/is-supported bin/is-macos macos linux)
 PATH := $(DOTFILES_DIR)/bin:$(PATH)
 export XDG_CONFIG_HOME := $(HOME)/.config
 export STOW_DIR := $(DOTFILES_DIR)
@@ -46,7 +46,7 @@ git: brew
 
 npm: brew
 	mkdir -p $(NVM_HOME)
-	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash | PROFILE=/dev/null
+	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 	. $(NVM_HOME)/nvm.sh; nvm install --lts
 
 brew-packages: brew
@@ -56,4 +56,4 @@ cask-apps: brew
 	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile
 
 node-packages: npm
-	npm install -g $(shell cat install/npmfile)
+    . $(NVM_HOME)/nvm.sh; npm install -g $(shell cat install/npmfile)
