@@ -3,6 +3,7 @@ tap "homebrew/core"
  
 brew "coreutils"
 brew "diff-so-fancy"
+brew "dockutil"
 brew "git"
 brew "git-extras"
 brew "gnu-sed", args: ["with-default-names"]

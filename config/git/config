@@ -6,7 +6,7 @@
   user = ivosabev
 
 [core]
-  excludesfile = ~/.config/git/ignore
+	excludesfile = /Users/ivolution/.config/git/ignore
   editor = "s -n -w"
   filemode = false
   trustctime = false
@@ -61,8 +61,8 @@
 [difftool]
   prompt = false
 [difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path = 
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
 
 [merge]
   tool = Kaleidoscope
@@ -71,8 +71,8 @@
 [mergetool]
   prompt = false
 [mergetool "sourcetree"]
-  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-  trustExitCode = true
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 [commit]
   template = /Users/ivolution/.stCommitMsg
 [filter "lfs"]
