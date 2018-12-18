@@ -16,6 +16,7 @@ nvm alias default 9
 
 packages=(
   appcenter-cli
+  fkill-cli
   npm
   npm-upgrade
   react-native-cli
