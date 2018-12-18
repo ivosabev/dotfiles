@@ -1,8 +1,9 @@
-brew "tap caskroom/versions"
-brew "tap caskroom/cask"
-brew "tap caskroom/fonts "
+tap "caskroom/versions"
+tap "caskroom/cask"
+tap "caskroom/fonts"
 
 cask "android-studio"
+cask "appcleaner"
 cask "dropbox"
 cask "firefox"
 cask "font-hack"
@@ -18,16 +19,8 @@ cask "slack"
 cask "sourcetree"
 cask "spotify"
 cask "sublime-text"
+cask "the-unarchiver"
 cask "transmission"
 cask "veracrypt"
 cask "visual-studio-code"
 cask "vlc"
-)
-
-brew cask install --force "${apps[@]}"
-
-# Quick Look Plugins (https://github.com/sindresorhus/quick-look-plugins)
-# brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlimagesize webpquicklook suspicious-package qlvideo
-
-# Link Hammerspoon config
-# if [ ! -d ~/.hammerspoon ]; then ln -sfv "$DOTFILES_DIR/etc/hammerspoon/" ~/.hammerspoon; fi

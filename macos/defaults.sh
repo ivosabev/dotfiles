@@ -312,8 +312,10 @@ sudo chflags nohidden /Volumes
 # Show indicator lights for open applications in the Dock
 defaults write com.apple.dock show-process-indicators -bool true
 
-# Set the icon size of Dock items to 36 pixels
-defaults write com.apple.dock tilesize -int 36
+# Set the icon size of Dock items to 88 pixels
+defaults write com.apple.dock magnification -int 1
+defaults write com.apple.dock tilesize -int 88
+defaults write com.apple.dock largesize -int 128
 
 # Change minimize/maximize window effect
 defaults write com.apple.dock mineffect -string "scale"
@@ -413,10 +415,10 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 ###############################################################################
 
 # Disable local Time Machine backups
-hash tmutil &> /dev/null && sudo tmutil disablelocal
+# hash tmutil &> /dev/null && sudo tmutil disablelocal
 
 # Disable local Time Machine snapshots
-sudo tmutil disablelocal
+# sudo tmutil disablelocal
 
 ###############################################################################
 # Activity Monitor                                                            #

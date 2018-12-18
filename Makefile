@@ -18,7 +18,6 @@ core-linux:
 	apt-get update
 	apt-get upgrade -y
 	apt-get dist-upgrade -f
-	apt-get -y install stow
 
 stow-macos: brew
 	is-executable stow || brew install stow
@@ -30,13 +29,14 @@ sudo:
 	sudo -v
 	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-packages: brew-packages cask-apps node-packages gems
+packages: brew-packages cask-apps node-packages
 
 link: stow-$(OS)
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then mv -v $(HOME)/$$FILE{,.bak}; fi; done
 	mkdir -p $(XDG_CONFIG_HOME)
 	stow -t $(HOME) runcom
 	stow -t $(XDG_CONFIG_HOME) config
+	source ~/.bashrc
 
 unlink: stow-$(OS)
 	stow --delete -t $(HOME) runcom
@@ -66,4 +66,4 @@ cask-apps: brew
 	for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
 
 node-packages: npm
-    . $(NVM_DIR)/nvm.sh; npm install -g $(shell cat install/npmfile)
+	. $(NVM_DIR)/nvm.sh; npm install -g $(shell cat install/npmfile)
