@@ -5,6 +5,7 @@ fi
 
 brew tap caskroom/versions
 brew tap caskroom/cask
+brew tap caskroom/fonts 
 
 # Install packages
 
@@ -12,6 +13,8 @@ apps=(
   android-studio
   dropbox
   firefox
+  font-hack
+  font-iosevka
   java
   google-chrome
   google-backup-and-sync
