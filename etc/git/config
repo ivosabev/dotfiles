@@ -1,12 +1,12 @@
 [user]
-	name = Ivo Sabev
-	email = ivolution@gmail.com
+  name = Ivo Sabev
+  email = ivolution@gmail.com
 
 [github]
   user = ivosabev
 
 [core]
-	excludesfile = ~/.config/git/ignore
+  excludesfile = ~/.config/git/ignore
   editor = "s -n -w"
   filemode = false
   trustctime = false
@@ -61,8 +61,8 @@
 [difftool]
   prompt = false
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
 
 [merge]
   tool = Kaleidoscope
@@ -71,15 +71,15 @@
 [mergetool]
   prompt = false
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true
 [commit]
-	template = /Users/ivolution/.stCommitMsg
+  template = /Users/ivolution/.stCommitMsg
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
 
 [color]
   ui = auto
