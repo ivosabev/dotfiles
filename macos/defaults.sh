@@ -411,12 +411,6 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.apple.terminal "Default Window Settings" -string "Pro"
 defaults write com.apple.terminal "Startup Window Settings" -string "Pro"
 defaults write com.apple.Terminal ShowLineMarks -int 0
-osascript -e "tell application \"Terminal\" to set the font name of window 1 to \"Hack\""
-osascript -e "tell application \"Terminal\" to set the font size of window 1 to 15"
-
-# Disable audible and visual bells
-defaults write com.apple.terminal "Bell" -bool false
-defaults write com.apple.terminal "VisualBell" -bool false
 
 # Disable the annoying line marks
 defaults write com.apple.Terminal ShowLineMarks -int 0
