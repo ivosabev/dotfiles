@@ -15,7 +15,7 @@ apps=(
   java
   google-chrome
   google-backup-and-sync
-  kaleidoscope
+  osxfuse
   postico
   sequel-pro
   skype
@@ -24,6 +24,7 @@ apps=(
   spotify
   sublime-text
   transmission
+  veracrypt
   visual-studio-code
   vlc
 )
