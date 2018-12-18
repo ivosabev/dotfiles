@@ -5,7 +5,7 @@ osascript -e 'tell application "System Preferences" to quit'
 # Ask for the administrator password upfront
 sudo -v
 
-# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
+# Keep-alive: update existing `sudo` time stamp until this script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ###############################################################################
@@ -63,7 +63,7 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
 # Disable the crash reporter
-#defaults write com.apple.CrashReporter DialogType -string "none"
+defaults write com.apple.CrashReporter DialogType -string "none"
 
 # Restart automatically if the computer freezes
 sudo systemsetup -setrestartfreeze on
@@ -280,9 +280,6 @@ defaults write com.apple.finder FXPreferredViewStyle -string "icnv"
 # Disable the warning before emptying the Trash
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
-# Enable the MacBook Air SuperDrive on any Mac
-# sudo nvram boot-args="mbasd=1"
-
 # Expand the following File Info panes:
 # “General”, “Open with”, and “Sharing & Permissions”
 defaults write com.apple.finder FXInfoPanesExpanded -dict General -bool true OpenWith -bool true Privileges -bool true
@@ -365,6 +362,16 @@ defaults write com.apple.dock expose-animation-duration -float 0.1
 # defaults write com.apple.dock wvous-br-corner -int 0
 # defaults write com.apple.dock wvous-br-modifier -int 0
 
+###############################################################################
+# Calendar                                                                    #
+###############################################################################
+
+# Show week numbers (10.8 only)
+defaults write com.apple.iCal "Show Week Numbers" -bool true
+
+# Week starts on monday
+defaults write com.apple.iCal "first day of week" -int 1
+ 
 ###############################################################################
 # Spotlight                                                                   #
 ###############################################################################
