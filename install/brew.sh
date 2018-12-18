@@ -11,7 +11,6 @@ brew upgrade
 # Install packages
 
 apps=(
-  bash-completion2
   coreutils
   diff-so-fancy
   git
