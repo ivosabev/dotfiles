@@ -6,7 +6,7 @@
   user = ivosabev
 
 [core]
-	excludesfile = /Users/ivolution/.gitignore_global
+	excludesfile = ~/.config/git/ignore
   editor = "s -n -w"
   filemode = false
   trustctime = false
