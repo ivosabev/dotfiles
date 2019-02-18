@@ -4,7 +4,6 @@ tap "caskroom/fonts"
 
 cask "android-studio"
 cask "appcleaner"
-cask "firefox"
 cask "font-hack"
 cask "font-iosevka"
 cask "java"
