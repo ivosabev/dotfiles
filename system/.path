@@ -16,7 +16,7 @@ prepend-path "/usr/sbin"
 prepend-path "/usr/local/sbin"
 
 # Custom
-prepend-path "/usr/local/Cellar/postgresql@9.6/9.6.10/bin"
+prepend-path "/usr/local/Cellar/postgresql@9.6/9.6.11/bin"
 prepend-path "/Users/ivolution/Library/Android/sdk/tools"
 prepend-path "/Users/ivolution/Library/Android/sdk/platform-tools"
 
