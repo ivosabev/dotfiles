@@ -63,7 +63,10 @@ export DOTFILES_DIR DOTFILES_EXTRA_DIR ANDROID_HOME ANDROID_SDK_ROOT NODE_ENV GI
 
 # PHP
 
-export PATH="/usr/local/opt/php@7.1/bin:$PATH"
-export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
+# export PATH="/usr/local/opt/php@7.1/bin:$PATH"
+# export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
+
+export PATH="/usr/local/opt/php@5.6/bin:$PATH"
+export PATH="/usr/local/opt/php@5.6/sbin:$PATH"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
