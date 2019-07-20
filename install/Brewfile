@@ -7,8 +7,8 @@ brew "diff-so-fancy"
 brew "dockutil"
 brew "git"
 brew "git-extras"
-brew "gnu-sed", args: ["with-default-names"]
-brew "grep", args: ["with-default-names"]
+brew "gnu-sed"
+brew "grep"
 brew "imagemagick"
 brew "m-cli"
 brew "mackup"
