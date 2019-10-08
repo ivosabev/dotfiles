@@ -2,6 +2,7 @@ tap "caskroom/versions"
 tap "caskroom/cask"
 tap "caskroom/fonts"
 
+cask "android-ndk"
 cask "android-studio"
 cask "appcleaner"
 cask "font-hack"

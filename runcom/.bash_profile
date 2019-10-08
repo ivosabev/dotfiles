@@ -54,6 +54,7 @@ unset READLINK CURRENT_SCRIPT SCRIPT_PATH DOTFILE EXTRAFILE
 
 ANDROID_HOME=~/Library/Android/sdk
 ANDROID_SDK_ROOT=~/Library/Android/sdk
+ANDROID_NDK_HOME=/usr/local/share/android-ndk
 NODE_ENV="development"
 GITHUB_AUTH=""
 
