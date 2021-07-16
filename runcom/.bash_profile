@@ -51,16 +51,25 @@ fi
 unset READLINK CURRENT_SCRIPT SCRIPT_PATH DOTFILE EXTRAFILE
 
 # CUSTOM
+unset JAVA_HOME
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_282`
+export PATH=$PATH:$JAVA_HOME/bin
 
-ANDROID_HOME=~/Library/Android/sdk
-ANDROID_SDK_ROOT=~/Library/Android/sdk
-ANDROID_NDK_HOME=/usr/local/share/android-ndk
-NODE_ENV="development"
-GITHUB_AUTH=""
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export ANDROID_SDK_ROOT=~/Library/Android/sdk
+export ANDROID_NDK_HOME=/usr/local/share/android-ndk
+
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+export NODE_ENV="development"
+export GITHUB_AUTH=""
 
 # Export
 
-export DOTFILES_DIR DOTFILES_EXTRA_DIR ANDROID_HOME ANDROID_SDK_ROOT NODE_ENV GITHUB_AUTH
+export DOTFILES_DIR DOTFILES_EXTRA_DIR
 
 # PHP
 
