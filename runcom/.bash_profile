@@ -52,7 +52,7 @@ unset READLINK CURRENT_SCRIPT SCRIPT_PATH DOTFILE EXTRAFILE
 
 # CUSTOM
 unset JAVA_HOME
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8.0_282`
+export JAVA_HOME="/Users/ivolution/Library/Java/JavaVirtualMachines/temurin-1.8.0_312/Contents/Home"
 export PATH=$PATH:$JAVA_HOME/bin
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
