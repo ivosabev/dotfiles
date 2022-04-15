@@ -59,6 +59,8 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=~/Library/Android/sdk
 export ANDROID_NDK_HOME=/usr/local/share/android-ndk
 
+export HOMEBREW_CASK_OPTS=--no-quarantine
+
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
