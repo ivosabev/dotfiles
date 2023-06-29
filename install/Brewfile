@@ -1,19 +1,52 @@
 tap "homebrew/bundle"
 tap "homebrew/core"
+tap "lotyp/homebrew-formulae"
 
-brew "awscli" 
+# core/dotfiles
 brew "coreutils"
+brew "lotyp/formulae/dockutil"
+brew "mackup"
+brew "nano"
+brew "stow"
+brew "topgrade"
+
+# fs/network
+brew "bat"
+# brew "croc"
+brew "httpie"
+brew "ngrok"
+brew "ssh-copy-id"
+brew "tree"
+brew "unar"
+brew "wget"
+brew "zoxide"
+
+# search/grep/diff
 brew "diff-so-fancy"
-brew "dockutil"
-brew "git"
-brew "git-extras"
+brew "fd"
+brew "fzf"
 brew "gnu-sed"
 brew "grep"
+brew "jq"
+brew "psgrep"
+brew "the_silver_searcher"
+
+# languages/tools
+brew "gh"
+
+# media
+brew "ffmpeg"
 brew "imagemagick"
+brew "uni"
+brew "webp"
+
+# mytools
+brew "awscli" 
 brew "m-cli"
-brew "mackup"
 brew "mariadb"
 brew "postgresql@12"
 brew "redis"
 brew "watchman"
-brew "wget"
+
+# brew "git"
+# brew "git-extras"

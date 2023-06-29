@@ -1,4 +1,23 @@
 COMPUTER_NAME="Ivolution"
+LANGUAGES=(en bg)
+LOCALE="en_US@currency=EUR"
+MEASUREMENT_UNITS="Centimeters"
+# SCREENSHOTS_FOLDER="${HOME}/Screenshots"
+
+# Topics
+#
+# - Computer & Host name
+# - Localization
+# - System
+# - Keyboard & Input
+# - Trackpad, mouse, Bluetooth accessories
+# - Screen
+# - Finder
+# - Dock
+# - Calendar
+# - Terminal
+# - Activity Monitor
+# - Software Updates
 
 osascript -e 'tell application "System Preferences" to quit'
 
@@ -9,7 +28,7 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ###############################################################################
-# General UI/UX                                                               #
+# Computer & Host name                                                        #
 ###############################################################################
 
 # Set computer name (as done via System Preferences → Sharing)
@@ -18,14 +37,29 @@ sudo scutil --set HostName "$COMPUTER_NAME"
 sudo scutil --set LocalHostName "$COMPUTER_NAME"
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$COMPUTER_NAME"
 
+###############################################################################
+# Localization                                                                #
+###############################################################################
+
 # Set language and text formats
-defaults write NSGlobalDomain AppleLanguages -array "en-BG"
-defaults write NSGlobalDomain AppleLocale -string "en_BG@currency=BGN"
-defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
+defaults write NSGlobalDomain AppleLanguages -array ${LANGUAGES[@]}
+defaults write NSGlobalDomain AppleLocale -string "$LOCALE"
+defaults write NSGlobalDomain AppleMeasurementUnits -string "$MEASUREMENT_UNITS"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
- 
-# Set the timezone (see `sudo systemsetup -listtimezones` for other values)
-sudo systemsetup -settimezone "Europe/Amsterdam" > /dev/null
+
+# Using systemsetup might give Error:-99, can be ignored (commands still work)
+# systemsetup manpage: https://ss64.com/osx/systemsetup.html
+
+# Set the time zone
+sudo defaults write /Library/Preferences/com.apple.timezone.auto Active -bool YES
+sudo systemsetup -setusingnetworktime on
+
+###############################################################################
+# System                                                                      #
+###############################################################################
+
+# Restart automatically if the computer freezes (Error:-99 can be ignored)
+sudo systemsetup -setrestartfreeze on
 
 # Set standby delay to 24 hours (default is 1 hour)
 sudo pmset -a standbydelay 86400
@@ -38,9 +72,7 @@ defaults write com.apple.sound.beep.feedback -bool false
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=" "
-
-# Menu bar: disable transparency
-defaults write com.apple.universalaccess reduceTransparency -bool true
+sudo nvram StartupMute=%01
 
 # Menu bar: show battery percentage
 defaults write com.apple.menuextra.battery ShowPercent YES
@@ -68,29 +100,23 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 # Disable the “Are you sure you want to open this application?” dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
-
 # Disable Resume system-wide
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
 # Disable the crash reporter
 defaults write com.apple.CrashReporter DialogType -string "none"
 
-# Restart automatically if the computer freezes
-sudo systemsetup -setrestartfreeze on
-
-# Never go into computer sleep mode
-sudo systemsetup -setcomputersleep Off > /dev/null
+# Disable Notification Center and remove the menu bar icon
+launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
 
 ###############################################################################
  # Keyboard & Input                                                            #
  ###############################################################################
  
-# Disable automatic capitalization as it’s annoying when typing code
+# Disable automatic capitalization as it’s annoying when typing code - ?
 defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 
-# Disable smart dashes as they’re annoying when typing code
+# Disable smart dashes as they’re annoying when typing code - ?
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
 # Disable smart quotes and dashes as they’re annoying when typing code
@@ -115,24 +141,7 @@ defaults write com.apple.BezelServices kDim -bool true
 defaults write com.apple.BezelServices kDimTime -int 300
 
 # Disable auto-correct
-# defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-# Follow the keyboard focus while zoomed in
-# defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
-
-###############################################################################
-# SSD-specific tweaks                                                         #
-###############################################################################
-
-# Disable hibernation (speeds up entering sleep mode)
-sudo pmset -a hibernatemode 0
-
-# Remove the sleep image file to save disk space
-sudo rm /private/var/vm/sleepimage
-# Create a zero-byte file instead…
-sudo touch /private/var/vm/sleepimage
-# …and make sure it can’t be rewritten
-sudo chflags uchg /private/var/vm/sleepimage
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 ###############################################################################
 # Trackpad, mouse, Bluetooth accessories                                      #
@@ -172,20 +181,6 @@ sudo chmod 444 /private/var/db/.AccessibilityAPIEnabled
 defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 defaults write com.apple.universalaccess HIDScrollZoomModifierMask -int 262144
 
-# Set language and text formats
-# Note: if you’re in the US, replace `EUR` with `USD`, `Centimeters` with
-# `Inches`, `en_GB` with `en_US`, and `true` with `false`.
-defaults write NSGlobalDomain AppleLanguages -array "en" "nl"
-defaults write NSGlobalDomain AppleLocale -string "en_US@currency=EUR"
-defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
-defaults write NSGlobalDomain AppleMetricUnits -bool true
-
-# Set the timezone; see `sudo systemsetup -listtimezones` for other values
-sudo systemsetup -settimezone "Europe/Sofia" > /dev/null
-
-# Disable auto-correct
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
 ###############################################################################
 # Screen                                                                      #
 ###############################################################################
@@ -195,7 +190,7 @@ defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Save screenshots to the desktop
-defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+defaults write com.apple.screencapture location -string "${SCREENSHOTS_FOLDER}"
 
 # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
 defaults write com.apple.screencapture type -string "png"
@@ -312,27 +307,17 @@ sudo chflags nohidden /Volumes
 # Show indicator lights for open applications in the Dock
 defaults write com.apple.dock show-process-indicators -bool true
 
-# Set the icon size of Dock items to 88 pixels
-defaults write com.apple.dock magnification -int 1
-defaults write com.apple.dock tilesize -int 88
-defaults write com.apple.dock largesize -int 128
-
-# Change minimize/maximize window effect
-defaults write com.apple.dock mineffect -string "scale"
-
 # Don’t animate opening applications from the Dock
 defaults write com.apple.dock launchanim -bool false
 
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
 
+# Make Dock icons of hidden applications translucent
+defaults write com.apple.dock showhidden -bool true
+
 # No bouncing icons
 defaults write com.apple.dock no-bouncing -bool true
-
-# Wipe all (default) app icons from the Dock
-# This is only really useful when setting up a new Mac, or if you don’t use
-# the Dock to launch apps.
-defaults write com.apple.dock persistent-apps -array
 
 # Disable hot corners
 defaults write com.apple.dock wvous-tl-corner -int 0
@@ -342,6 +327,11 @@ defaults write com.apple.dock wvous-br-corner -int 0
 
 # Don't show recently used applications in the Dock
 defaults write com.Apple.Dock show-recents -bool false
+
+# Wipe all (default) app icons from the Dock
+# This is only really useful when setting up a new Mac, or if you don’t use
+# the Dock to launch apps.
+defaults write com.apple.dock persistent-apps -array
 
 ###############################################################################
 # Calendar                                                                    #
@@ -354,48 +344,6 @@ defaults write com.apple.iCal "Show Week Numbers" -bool true
 defaults write com.apple.iCal "first day of week" -int 1
 
 ###############################################################################
-# Spotlight                                                                   #
-###############################################################################
-
-# Hide Spotlight tray-icon (and subsequent helper)
-#sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
-# Disable Spotlight indexing for any volume that gets mounted and has not yet
-# been indexed before.
-# Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
-sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
-# Change indexing order and disable some file types
-defaults write com.apple.spotlight orderedItems -array \
-	'{"enabled" = 1;"name" = "APPLICATIONS";}' \
-	'{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}' \
-	'{"enabled" = 0;"name" = "MENU_CONVERSION";}' \
-	'{"enabled" = 1;"name" = "MENU_EXPRESSION";}' \
-	'{"enabled" = 1;"name" = "MENU_DEFINITION";}' \
-	'{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
-	'{"enabled" = 0;"name" = "DOCUMENTS";}' \
-	'{"enabled" = 0;"name" = "DIRECTORIES";}' \
-	'{"enabled" = 0;"name" = "PRESENTATIONS";}' \
-	'{"enabled" = 0;"name" = "SPREADSHEETS";}' \
-	'{"enabled" = 0;"name" = "PDF";}' \
-	'{"enabled" = 0;"name" = "MESSAGES";}' \
-	'{"enabled" = 1;"name" = "CONTACT";}' \
-	'{"enabled" = 0;"name" = "EVENT_TODO";}' \
-	'{"enabled" = 0;"name" = "IMAGES";}' \
-	'{"enabled" = 0;"name" = "BOOKMARKS";}' \
-	'{"enabled" = 0;"name" = "MUSIC";}' \
-	'{"enabled" = 0;"name" = "MOVIES";}' \
-	'{"enabled" = 0;"name" = "FONTS";}' \
-	'{"enabled" = 0;"name" = "MENU_OTHER";}'
-
-# Load new settings before rebuilding the index
-killall mds > /dev/null 2>&1
-
-# Make sure indexing is enabled for the main volume
-sudo mdutil -i on / > /dev/null
-
-# Rebuild the index from scratch
-sudo mdutil -E / > /dev/null
-
-###############################################################################
 # Terminal                                                                    #
 ###############################################################################
 
@@ -406,19 +354,6 @@ defaults write com.apple.terminal StringEncodings -array 4
 defaults write com.apple.terminal "Default Window Settings" -string "Pro"
 defaults write com.apple.terminal "Startup Window Settings" -string "Pro"
 defaults write com.apple.Terminal ShowLineMarks -int 0
-
-# Disable the annoying line marks
-defaults write com.apple.Terminal ShowLineMarks -int 0
-
-###############################################################################
-# Time Machine                                                                #
-###############################################################################
-
-# Disable local Time Machine backups
-# hash tmutil &> /dev/null && sudo tmutil disablelocal
-
-# Disable local Time Machine snapshots
-# sudo tmutil disablelocal
 
 ###############################################################################
 # Activity Monitor                                                            #
