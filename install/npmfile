@@ -1,7 +1,15 @@
 appcenter-cli
+fast-cli
 fkill-cli
+gtop
+local-web-server
 npm
-npm-upgrade
 react-native-cli
-react-native-git-upgrade
+svgo
 yarn
+
+# Note: Maybe do not install these globally
+nodemon
+npm-check
+prettier
+release-it

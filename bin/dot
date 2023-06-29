@@ -10,16 +10,25 @@ sub_help () {
   echo "Commands:"
   echo "   clean            Clean up caches (brew, nvm)"
   echo "   dock             Apply macOS Dock settings"
-  echo "   edit             Open dotfiles in IDE ($DOTFILES_IDE) and Git GUI ($DOTFILES_GIT_GUI)"
+  echo "   edit             Open dotfiles in IDE ($VISUAL) and Git GUI ($VISUAL_GIT)"
   echo "   help             This help message"
   echo "   macos            Apply macOS system defaults"
   echo "   test             Run tests"
-  echo "   update           Update packages and pkg managers (OS, brew, npm)"
+  echo "   update           Update packages and pkg managers (brew, casks, npm, macOS)"
+}
+
+sub_clean () {
+  echo "$ brew cleanup"
+  brew cleanup
+}
+
+sub_dock () {
+  . "${DOTFILES_DIR}/macos/dock.sh" && echo "Dock reloaded."
 }
 
 sub_edit () {
-  sh -c "$DOTFILES_IDE $DOTFILES_DIR"
-  sh -c "$DOTFILES_GIT_GUI $DOTFILES_DIR"
+  sh -c "$VISUAL $DOTFILES_DIR"
+  sh -c "$VISUAL_GIT $DOTFILES_DIR"
 }
 
 sub_test () {
@@ -27,11 +36,7 @@ sub_test () {
 }
 
 sub_update () {
-  sudo softwareupdate -i -a
-  brew update
-  brew upgrade
-  npm install npm -g
-  npm update -g
+  topgrade
 }
 
 sub_clean () {
