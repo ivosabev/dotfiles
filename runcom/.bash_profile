@@ -56,14 +56,12 @@ javahome() {
   export JAVA_HOME=$(/usr/libexec/java_home -v "$1");
 }
 
-alias j1.8='javahome 1.8'
 alias j11='javahome 11'
-alias j18='javahome 18'
 j11
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
-export ANDROID_SDK_ROOT=~/Library/Android/sdk
-export ANDROID_NDK_HOME=/usr/local/share/android-ndk
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+export ANDROID_NDK_HOME=$ANDROID_HOME/ndk
 
 export HOMEBREW_CASK_OPTS=--no-quarantine
 
