@@ -8,6 +8,7 @@ brew "lotyp/formulae/dockutil"
 brew "mackup"
 brew "nano"
 brew "stow"
+brew "thefuck"
 brew "topgrade"
 
 # fs/network
