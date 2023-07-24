@@ -77,9 +77,8 @@ endif
 git: brew
 	$(BIN)/brew install git git-extras
 
-npm:
-	if ! [ -d $(NVM_DIR)/.git ]; then git clone https://github.com/nvm-sh/nvm.git $(NVM_DIR); fi
-	. $(NVM_DIR)/nvm.sh; nvm install --lts
+npm: brew-packages
+	$(BIN)/fnm install --lts
 
 ruby: brew
 	$(BIN)/brew install ruby
@@ -93,4 +92,4 @@ cask-apps: brew
 	for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
 
 node-packages: npm
-	. $(NVM_DIR)/nvm.sh; npm install -g $(shell cat install/npmfile)
+	eval $$($(BIN)/fnm env); npm install -g $(shell cat install/npmfile)
