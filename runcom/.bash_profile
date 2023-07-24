@@ -42,14 +42,6 @@ export DOTFILES_DIR
 
 # Custom stuff
 
-javahome() {
-  unset JAVA_HOME
-  export JAVA_HOME=$(/usr/libexec/java_home -v "$1");
-}
-
-alias j11='javahome 11'
-j11
-
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export HOMEBREW_CASK_OPTS=--no-quarantine
 
