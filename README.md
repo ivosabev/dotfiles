@@ -34,6 +34,7 @@ On a sparkling fresh installation of macOS:
 
 ```bash
 sudo softwareupdate -i -a
+softwareupdate --install-rosetta
 xcode-select --install
 ```
 
@@ -69,7 +70,6 @@ The installation process in the Makefile is tested on every push and every week 
 - `dot dock` (set [Dock items](./macos/dock.sh))
 - `dot macos` (set [macOS defaults](./macos/defaults.sh))
 - Mackup
-  - Log in to Dropbox (and wait until synced)
   - `cd && ln -s ~/.config/mackup/.mackup.cfg ~`
   - `mackup restore`
 - Start `Hammerspoon` once and set "Launch Hammerspoon at login"
