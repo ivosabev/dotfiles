@@ -21,7 +21,7 @@ PATH="$DOTFILES_DIR/bin:$PATH"
 
 # Source the dotfiles (order matters)
 
-for DOTFILE in "$DOTFILES_DIR"/system/.{function,function_*,path,env,exports,alias,grep,prompt,completion,fix,zoxide}; do
+for DOTFILE in "$DOTFILES_DIR"/system/.{function,function_*,path,env,exports,alias,fnm,grep,prompt,completion,fix,zoxide}; do
   . "$DOTFILE"
 done
 
@@ -50,17 +50,18 @@ javahome() {
 alias j11='javahome 11'
 j11
 
+export BASH_SILENCE_DEPRECATION_WARNING=1
+export HOMEBREW_CASK_OPTS=--no-quarantine
+
+
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export ANDROID_NDK_HOME=$ANDROID_HOME/ndk
-
-export HOMEBREW_CASK_OPTS=--no-quarantine
 
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 export NODE_ENV="development"
 export GITHUB_AUTH=""

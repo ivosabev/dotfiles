@@ -5,9 +5,11 @@ OS := $(shell bin/is-supported bin/is-macos macos linux)
 HOMEBREW_PREFIX := $(shell bin/is-supported bin/is-macos $(shell bin/is-supported bin/is-arm64 /opt/homebrew /usr/local) /home/linuxbrew/.linuxbrew)
 SHELLS := /private/etc/shells
 BIN := $(HOMEBREW_PREFIX)/bin
+
 export XDG_CONFIG_HOME = $(HOME)/.config
 export STOW_DIR = $(DOTFILES_DIR)
 export ACCEPT_EULA=Y
+export HOMEBREW_CASK_OPTS=--no-quarantine
 
 .PHONY: test
 
@@ -25,7 +27,7 @@ core-linux:
 	apt-get dist-upgrade -f
 
 stow-macos: brew
-	is-executable stow || brew install stow
+	is-executable stow || $(BIN)/brew install stow
 
 stow-linux: core-linux
 	is-executable stow || apt-get -y install stow
@@ -56,8 +58,7 @@ unlink: stow-$(OS)
 brew:
 	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
 
-
-bash: BASH=/usr/local/bin/bash
+bash: BASH=/opt/homebrew/bin/bash
 bash: SHELLS=/private/etc/shells
 bash: brew
 ifdef GITHUB_ACTION
