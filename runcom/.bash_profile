@@ -53,6 +53,9 @@ j11
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export HOMEBREW_CASK_OPTS=--no-quarantine
 
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+
+export JAVA_HOME=$(/usr/libexec/java_home -- -v)
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
