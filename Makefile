@@ -38,7 +38,7 @@ ifndef GITHUB_ACTION
 	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 endif
 
-packages: brew-packages cask-apps node-packages
+packages: brew-packages cask-apps node-packages rust-packages
 
 link: stow-$(OS)
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
@@ -84,13 +84,19 @@ npm: brew-packages
 ruby: brew
 	$(BIN)/brew install ruby
 
+rust: brew
+	$(BIN)/brew install rust
+	
 brew-packages: brew
 	$(BIN)/brew bundle --file=$(DOTFILES_DIR)/install/Brewfile || true
 
 cask-apps: brew
 	$(BIN)/brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
 	defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
-	for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
+	for EXT in $$(cat install/Codefile); do "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" --install-extension $$EXT; done
 
 node-packages: npm
 	eval $$($(BIN)/fnm env); npm install -g $(shell cat install/npmfile)
+
+rust-packages: rust
+	$(BIN)/cargo install $(shell cat install/Rustfile)
