@@ -32,6 +32,7 @@ brew "psgrep"
 brew "the_silver_searcher"
 
 # languages/tools
+brew "fnm"
 brew "gh"
 
 # media

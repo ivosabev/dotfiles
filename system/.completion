@@ -21,10 +21,9 @@ if is-executable npm; then
   . <(npm completion)
 fi
 
-# nvm
-
-if is-executable nvm; then
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# fnm
+if is-executable fnm; then
+  . <(fnm completions --shell bash)
 fi
 
 # Git

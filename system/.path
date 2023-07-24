@@ -20,6 +20,7 @@ prepend-path "$DOTFILES_DIR/bin"
 prepend-path "$HOME/.cargo/bin"
 prepend-path "/sbin"
 prepend-path "/usr/sbin"
+prepend-path "$HOME/.local/share/fnm"
 
 # Custom
 prepend-path "/usr/local/opt/postgresql@12/bin"
