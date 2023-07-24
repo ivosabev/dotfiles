@@ -44,10 +44,12 @@ link: stow-$(OS)
 	mkdir -p $(XDG_CONFIG_HOME)
 	$(BIN)/stow -t $(HOME) runcom
 	$(BIN)/stow -t $(XDG_CONFIG_HOME) config
+	ln -s "/Users/ivolution/Library/Mobile Documents/com~apple~CloudDocs" iCloud
 
 unlink: stow-$(OS)
 	$(BIN)/stow --delete -t $(HOME) runcom
 	$(BIN)/stow --delete -t $(XDG_CONFIG_HOME) config
+	rm $(HOME)/iCloud
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE.bak ]; then \
 		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
 
