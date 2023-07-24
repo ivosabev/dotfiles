@@ -17,7 +17,7 @@ macos: sudo core-macos packages link
 
 linux: core-linux link
 
-core-macos: brew bash git npm
+core-macos: brew bash git npm ruby rust
 
 core-linux:
 	apt-get update
@@ -78,6 +78,9 @@ git: brew
 npm:
 	if ! [ -d $(NVM_DIR)/.git ]; then git clone https://github.com/nvm-sh/nvm.git $(NVM_DIR); fi
 	. $(NVM_DIR)/nvm.sh; nvm install --lts
+
+ruby: brew
+	$(BIN)/brew install ruby
 
 brew-packages: brew
 	$(BIN)/brew bundle --file=$(DOTFILES_DIR)/install/Brewfile || true
