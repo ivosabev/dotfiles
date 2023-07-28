@@ -41,7 +41,7 @@ sub_update () {
 
 sub_clean () {
   brew cleanup
-  . "$NVM_DIR/nvm.sh"; nvm cache clear
+  echo "Done."
 }
 
 sub_macos () {
