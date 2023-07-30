@@ -5,6 +5,7 @@ gtop
 local-web-server
 npm
 svgo
+underscore-cli
 yarn
 
 # Note: Maybe do not install these globally
