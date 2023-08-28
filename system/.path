@@ -23,7 +23,7 @@ prepend-path "/usr/sbin"
 prepend-path "$HOME/.local/share/fnm"
 
 # Custom
-prepend-path "/usr/local/opt/postgresql@12/bin"
+prepend-path "$HOMEBREW_PREFIX/opt/postgresql@12/bin"
 # prepend-path "/Users/ivolution/Library/Android/sdk/tools"
 # prepend-path "/Users/ivolution/Library/Android/sdk/platform-tools"
 
