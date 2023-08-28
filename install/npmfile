@@ -4,6 +4,8 @@ fkill-cli
 gtop
 local-web-server
 npm
+npm-check
+release-it
 svgo
 tldr
 underscore-cli
@@ -11,6 +13,4 @@ yarn
 
 # Note: Maybe do not install these globally
 nodemon
-npm-check
 prettier
-release-it
