@@ -22,6 +22,7 @@ if is-executable npm; then
 fi
 
 # fnm
+
 if is-executable fnm; then
   . <(fnm completions --shell bash)
 fi
