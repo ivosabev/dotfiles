@@ -67,3 +67,6 @@ alias quit="exit"
 alias week="date +%V"
 alias speedtest="wget -O /dev/null http://speed.transip.nl/100mb.bin"
 alias grip="grip --browser --user=webpro --pass=$GITHUB_TOKEN"
+
+# Custom
+alias uncommit="git reset --soft HEAD~1"
