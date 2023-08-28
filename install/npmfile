@@ -5,6 +5,7 @@ gtop
 local-web-server
 npm
 svgo
+tldr
 underscore-cli
 yarn
 

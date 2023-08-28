@@ -39,11 +39,6 @@ sub_update () {
   topgrade
 }
 
-sub_clean () {
-  brew cleanup
-  echo "Done."
-}
-
 sub_macos () {
   for DEFAULTS_FILE in "${DOTFILES_DIR}"/macos/defaults*.sh; do
     echo "Applying ${DEFAULTS_FILE}" && . "${DEFAULTS_FILE}"
