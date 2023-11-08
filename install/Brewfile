@@ -4,6 +4,7 @@ tap "lotyp/homebrew-formulae"
 
 # core/dotfiles
 brew "coreutils"
+brew "duti"
 brew "lotyp/formulae/dockutil"
 brew "mackup"
 brew "nano"
@@ -15,7 +16,6 @@ brew "topgrade"
 brew "bat"
 # brew "croc"
 brew "httpie"
-brew "ngrok"
 brew "ssh-copy-id"
 brew "tree"
 brew "unar"
@@ -33,8 +33,10 @@ brew "psgrep"
 brew "the_silver_searcher"
 
 # languages/tools
-brew "fnm"
 brew "gh"
+brew "n"
+brew "python"
+brew "ruby"
 brew "rust"
 
 # media

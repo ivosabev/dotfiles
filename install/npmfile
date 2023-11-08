@@ -6,6 +6,7 @@ local-web-server
 npm
 npm-check
 release-it
+pnpm
 svgo
 tldr
 underscore-cli
