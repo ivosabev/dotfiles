@@ -18,7 +18,7 @@ macos: sudo core-macos packages link
 
 linux: core-linux link
 
-core-macos: brew bash git npm ruby rust
+core-macos: brew bash git java npm ruby rust
 
 core-linux:
   apt-get update
@@ -37,7 +37,7 @@ ifndef GITHUB_ACTION
   while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 endif
 
-packages: brew-packages cask-apps node-packages rust-packages
+packages: brew-packages cask-apps node-packages rust-packages java
 
 link: stow-$(OS)
   for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
@@ -76,6 +76,9 @@ endif
 
 git: brew
   $(BIN)/brew install git git-extras
+
+java: brew-packages
+  curl -s "https://get.sdkman.io" | bash
 
 npm: brew-packages
   $(BIN)/fnm install --lts

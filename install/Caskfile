@@ -39,7 +39,6 @@ cask "transmission"
 cask "veracrypt"
 cask "visual-studio-code"
 cask "vlc"
-case "zulu11"
 
 # cask "android-ndk"
 # cask "android-studio"

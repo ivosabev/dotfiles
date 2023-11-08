@@ -47,7 +47,7 @@ export HOMEBREW_CASK_OPTS=--no-quarantine
 
 export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 
-export JAVA_HOME=$(/usr/libexec/java_home -- -v)
+export JAVA_HOME="${SDKMAN_CANDIDATES_DIR}/java/current/"
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
@@ -67,3 +67,7 @@ export PATH="/usr/local/opt/php@5.6/bin:$PATH"
 export PATH="/usr/local/opt/php@5.6/sbin:$PATH"
 
 export PGDATA="$HOME/Sites/ufleet/data"###-begin-npm-completion-###
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
