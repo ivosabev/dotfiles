@@ -26,10 +26,12 @@ brew "zoxide"
 brew "diff-so-fancy"
 brew "fd"
 brew "fzf"
+brew "git-delta"
 brew "gnu-sed"
 brew "grep"
 brew "jq"
 brew "psgrep"
+brew "ripgrep"
 brew "the_silver_searcher"
 
 # languages/tools

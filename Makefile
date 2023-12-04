@@ -46,6 +46,8 @@ link: stow-$(OS)
   mkdir -p $(XDG_CONFIG_HOME)
   stow -t $(HOME) runcom
   stow -t $(XDG_CONFIG_HOME) config
+  mkdir -p $(HOME)/.local/runtime
+	chmod 700 $(HOME)/.local/runtime
 
 unlink: stow-$(OS)
   stow --delete -t $(HOME) runcom
@@ -93,7 +95,7 @@ vscode-extensions: cask-apps
   for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
 
 node-packages: npm
-  $(N_PREFIX)/bin/npm install -g $(shell cat install/npmfile)
+  $(N_PREFIX)/bin/npm install --force --location global $(shell cat install/npmfile)
 
 rust-packages: brew-packages
   cargo install $(shell cat install/Rustfile)
