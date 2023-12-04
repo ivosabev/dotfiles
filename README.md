@@ -14,8 +14,7 @@ It mainly targets macOS systems (should install on e.g. Ubuntu as well for many 
 - Well-organized and easy to customize
 - The installation and runcom setup is
   [tested weekly on real Ubuntu and macOS machines](https://github.com/ivosabev/dotfiles/actions)
-  (Big Sur/11, Monterey/12) using [a GitHub Action](./.github/workflows/dotfiles-installation.yml)
-  (currently on Ventura/13 myself)
+  (Monterey/12 and Ventura/13) using [a GitHub Action](./.github/workflows/dotfiles-installation.yml)
 - Supports both Apple Silicon (M1) and Intel chips
 
 ## Packages Overview
@@ -25,7 +24,6 @@ It mainly targets macOS systems (should install on e.g. Ubuntu as well for many 
 - [Node.js + npm LTS](https://nodejs.org/en/download/) (packages: [npmfile](./install/npmfile))
 - Latest Git, Bash, Python, GNU coreutils, curl, Ruby
 - [Hammerspoon](https://www.hammerspoon.org) (config: [keybindings & window management](./config/hammerspoon))
-- [Mackup](https://github.com/lra/mackup) (sync application settings)
 - `$EDITOR` is [GNU nano](https://www.nano-editor.org) (`$VISUAL` is `code` and Git `core.editor` is `code --wait`)
 
 ## Installation
@@ -34,7 +32,6 @@ On a sparkling fresh installation of macOS:
 
 ```bash
 sudo softwareupdate -i -a
-softwareupdate --install-rosetta
 xcode-select --install
 ```
 
@@ -54,28 +51,43 @@ This will clone or download this repo to `~/.dotfiles` (depending on the availab
 git clone https://github.com/ivosabev/dotfiles.git ~/.dotfiles
 ```
 
-Use the [Makefile](./Makefile) to install the [packages listed above](#packages-overview), and symlink
-[runcom](./runcom) and [config](./config) files (using [stow](https://www.gnu.org/software/stow/)):
+2. Use the [Makefile](./Makefile) to install the [packages listed above](#packages-overview), and symlink
+   [runcom](./runcom) and [config](./config) files (using [stow](https://www.gnu.org/software/stow/)):
 
 ```bash
 cd ~/.dotfiles
 make
 ```
 
-The installation process in the Makefile is tested on every push and every week in this
-[GitHub Action](https://github.com/ivosabev/dotfiles/actions).
+Running `make` with the Makefile is idempotent. The installation process in the Makefile is tested on every push and every week in this
+[GitHub Action](https://github.com/ivosabev/dotfiles/actions). Please file an issue in this repo if there are errors.
 
 ## Post-Installation
 
-- `dot dock` (set [Dock items](./macos/dock.sh))
-- `dot macos` (set [macOS defaults](./macos/defaults.sh))
-- Mackup
-  - `cd && ln -s ~/.config/mackup/.mackup.cfg ~`
-  - `mackup restore`
-- Start `Hammerspoon` once and set "Launch Hammerspoon at login"
-- `touch ~/.dotfiles/system/.exports` and populate this file with tokens (e.g. `export GITHUB_TOKEN=abc`)
+1. Set your Git credentials:
 
-## The `dotfiles` command
+```sh
+git config --global user.name "your name"
+git config --global user.email "your@email.com"
+git config --global github.user "your-github-username"
+```
+
+2. Set macOS [Dock items](./macos/dock.sh) and [system defaults](./macos/defaults.sh):
+
+```sh
+dot dock
+dot macos
+```
+
+3. Start Hammerspoon once and set "Launch Hammerspoon at login".
+
+4. Populate this file with tokens (example: `export GITHUB_TOKEN=abc`):
+
+```sh
+touch ~/.dotfiles/system/.exports
+```
+
+## The `dot` command
 
 ```
 $ dot help
@@ -93,7 +105,7 @@ Commands:
 
 ## Customize
 
-To customize the dotfiles to your likings, fork it and make sure to modify the locations above to your fork.
+To customize the dotfiles to your likings, fork it and [be the king of your castle!](https://www.ivosabev.nl/articles/getting-started-with-dotfiles)
 
 ## Credits
 
