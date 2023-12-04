@@ -105,7 +105,7 @@ Commands:
 
 ## Customize
 
-To customize the dotfiles to your likings, fork it and [be the king of your castle!](https://www.ivosabev.nl/articles/getting-started-with-dotfiles)
+To customize the dotfiles to your likings, fork it and [be the king of your castle!](https://www.webpro.nl/articles/getting-started-with-dotfiles)
 
 ## Credits
 
