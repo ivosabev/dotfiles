@@ -31,7 +31,7 @@ prepend-path "$HOME/.local/share/pnpm"
 prepend-path "$N_PREFIX/bin"
 
 # Custom
-prepend-path "$HOMEBREW_PREFIX/opt/postgresql@12/bin"
+prepend-path "$HOMEBREW_PREFIX/opt/postgresql@15/libexec/bin"
 # prepend-path "/Users/ivolution/Library/Android/sdk/tools"
 # prepend-path "/Users/ivolution/Library/Android/sdk/platform-tools"
 
