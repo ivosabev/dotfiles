@@ -12,9 +12,6 @@ export ACCEPT_EULA=Y
 export HOMEBREW_CASK_OPTS=--no-quarantine
 
 
-.PHONY: clean
-.PHONY: test
-
 .PHONY: all
 all: $(OS)
 
@@ -111,5 +108,8 @@ rust-packages: brew-packages
 duti:
 	duti -v $(DOTFILES_DIR)/install/duti
 
-test:
-	bats test
+# .PHONY: test
+# test:
+# 	bats test
+
+.PHONY: clean
