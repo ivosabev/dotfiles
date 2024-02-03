@@ -11,97 +11,105 @@ export STOW_DIR = $(DOTFILES_DIR)
 export ACCEPT_EULA=Y
 export HOMEBREW_CASK_OPTS=--no-quarantine
 
+
+.PHONY: clean
 .PHONY: test
 
+.PHONY: all
 all: $(OS)
 
+.PHONY: macos
 macos: sudo core-macos packages link duti
 
+.PHONY: linux
 linux: core-linux link
 
 core-macos: brew bash git java npm
 
 core-linux:
-  apt-get update
-  apt-get upgrade -y
-  apt-get dist-upgrade -f
+	apt-get update
+	apt-get upgrade -y
+	apt-get dist-upgrade -f
 
 stow-macos: brew
-  is-executable stow || $(BIN)/brew install stow
+	is-executable stow || $(BIN)/brew install stow
 
 stow-linux: core-linux
-  is-executable stow || apt-get -y install stow
+	is-executable stow || apt-get -y install stow
 
 sudo:
 ifndef GITHUB_ACTION
-  sudo -v
-  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+	sudo -v
+	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 endif
 
+.PHONY: packages
 packages: brew-packages cask-apps node-packages rust-packages java
 
+.PHONY: link
 link: stow-$(OS)
-  for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
-    mv -v $(HOME)/$$FILE{,.bak}; fi; done
-  mkdir -p $(XDG_CONFIG_HOME)
-  stow -t $(HOME) runcom
-  stow -t $(XDG_CONFIG_HOME) config
-  mkdir -p $(HOME)/.local/runtime
-  chmod 700 $(HOME)/.local/runtime
+	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
+		mv -v $(HOME)/$$FILE{,.bak}; fi; done
+	mkdir -p $(XDG_CONFIG_HOME)
+	stow -t $(HOME) runcom
+	stow -t $(XDG_CONFIG_HOME) config
+	mkdir -p $(HOME)/.local/runtime
+	chmod 700 $(HOME)/.local/runtime
 
 unlink: stow-$(OS)
-  stow --delete -t $(HOME) runcom
-  stow --delete -t $(XDG_CONFIG_HOME) config
-  for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE.bak ]; then \
-    mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
+	stow --delete -t $(HOME) runcom
+	stow --delete -t $(XDG_CONFIG_HOME) config
+	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE.bak ]; then \
+		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
 
 brew:
-  is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
+	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
 
+.PHONY: bash
 bash: BASH=/opt/homebrew/bin/bash
 bash: SHELLS=/private/etc/shells
 bash: brew
 ifdef GITHUB_ACTION
-  if ! grep -q bash $(SHELLS); then \
-    brew install bash bash-completion@2 pcre && \
-    sudo append bash $(SHELLS) && \
-    sudo chsh -s bash; \
-  fi
+	if ! grep -q bash $(SHELLS); then \
+		brew install bash bash-completion@2 pcre && \
+		sudo append bash $(SHELLS) && \
+		sudo chsh -s bash; \
+	fi
 else
-  if ! grep -q bash $(SHELLS); then \
-    brew install bash bash-completion@2 pcre && \
-    sudo append bash $(SHELLS) && \
-    chsh -s bash; \
-  fi
+	if ! grep -q bash $(SHELLS); then \
+		brew install bash bash-completion@2 pcre && \
+		sudo append bash $(SHELLS) && \
+		chsh -s bash; \
+	fi
 endif
 
 git: brew
-  $(BIN)/brew install git git-extras
+	$(BIN)/brew install git git-extras
 
 java: brew-packages
-  curl -s "https://get.sdkman.io" | bash
+	curl -s "https://get.sdkman.io" | bash
 
 npm: brew-packages
-  n install lts
+	n install lts
 
 brew-packages: brew
-  brew bundle --file=$(DOTFILES_DIR)/install/Brewfile || true
+	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile || true
 
 cask-apps: brew
-  brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
-  defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+	brew bundle --file=$(DOTFILES_DIR)/install/Caskfile || true
+	defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
 
 vscode-extensions: cask-apps
-  for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
+	for EXT in $$(cat install/Codefile); do code --install-extension $$EXT; done
 
 node-packages: npm
-  $(N_PREFIX)/bin/npm install --force --location global $(shell cat install/npmfile)
+	$(N_PREFIX)/bin/npm install --force --location global $(shell cat install/npmfile)
 
 rust-packages: brew-packages
-  cargo install $(shell cat install/Rustfile)
+	cargo install $(shell cat install/Rustfile)
 
 duti:
-  duti -v $(DOTFILES_DIR)/install/duti
+	duti -v $(DOTFILES_DIR)/install/duti
 
 test:
-  bats test
+	bats test
