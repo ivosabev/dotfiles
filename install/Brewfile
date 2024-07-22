@@ -55,7 +55,6 @@ brew "postgresql@15"
 brew "redis"
 brew "vroom"
 brew "watchman"
-brew "wkhtmltopdf"
 
 # brew "git"
 # brew "git-extras"

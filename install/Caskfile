@@ -1,5 +1,3 @@
-tap "homebrew/cask-fonts"
-
 # cask "banktivity"
 cask "android-ndk"
 cask "android-platform-tools"
