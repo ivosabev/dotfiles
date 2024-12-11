@@ -79,9 +79,9 @@
 [difftool]
   prompt = false
 
-[difftool "vscode"]
-  cmd = code --wait --diff $LOCAL $REMOTE
-  path =
+[difftool "sourcetree"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+	path =
 
 [merge]
   conflictstyle = diff3
@@ -91,9 +91,9 @@
 [mergetool]
   prompt = false
 
-[mergetool "vscode"]
-  cmd = code --wait $MERGED
-  trustExitCode = true
+[mergetool "sourcetree"]
+	cmd = code --wait $MERGED
+	trustExitCode = true
 
 [delta]
   light = false
