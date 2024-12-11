@@ -9,6 +9,7 @@ brew "mackup"
 brew "nano"
 brew "stow"
 brew "thefuck"
+brew "tmux"
 brew "topgrade"
 
 # fs/network
