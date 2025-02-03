@@ -15,11 +15,9 @@ export HOMEBREW_CASK_OPTS=--no-quarantine
 .PHONY: all
 all: $(OS)
 
-.PHONY: macos
-macos: sudo core-macos packages link duti
+macos: sudo core-macos packages link duti bun
 
-.PHONY: linux
-linux: core-linux link
+linux: core-linux link bun
 
 core-macos: brew bash git java npm
 
@@ -69,13 +67,13 @@ bash: brew
 ifdef GITHUB_ACTION
 	if ! grep -q bash $(SHELLS); then \
 		brew install bash bash-completion@2 pcre && \
-		sudo append $(shell which bash) $(SHELLS) && \
+		echo $(shell which bash) | sudo tee -a $(SHELLS) && \
 		sudo chsh -s $(shell which bash); \
 	fi
 else
 	if ! grep -q bash $(SHELLS); then \
 		brew install bash bash-completion@2 pcre && \
-		sudo append $(shell which bash) $(SHELLS) && \
+		echo $(shell which bash) | sudo tee -a $(SHELLS) && \
 		chsh -s $(shell which bash); \
 	fi
 endif
@@ -107,8 +105,8 @@ rust-packages: brew-packages
 duti:
 	duti -v $(DOTFILES_DIR)/install/duti
 
-# .PHONY: test
-# test:
-# 	bats test
+bun:
+  curl -fsSL https://bun.sh/install | bash
 
-.PHONY: clean
+test:
+	bats test

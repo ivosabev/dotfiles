@@ -5,6 +5,7 @@ alias _="sudo"
 alias g="git"
 alias rr="rm -rf"
 alias s="subl"
+alias mux="tmuxinator"
 
 # Default options
 
@@ -70,3 +71,6 @@ alias grip="grip --browser --user=webpro --pass=$GITHUB_TOKEN"
 
 # Custom
 alias uncommit="git reset --soft HEAD~1"
+alias grip="grip --browser --pass=$GITHUB_TOKEN"
+alias fkill="ps -e | fzf | awk '{print $1}' | xargs kill"
+alias formatmd="remark --use remark-preset-webpro"
