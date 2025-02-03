@@ -14,7 +14,3 @@ remark-preset-webpro
 svgo
 tldr
 underscore-cli
-
-# Note: Maybe do not install these globally
-nodemon
-prettier
