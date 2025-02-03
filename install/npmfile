@@ -8,6 +8,9 @@ npm
 npm-check
 release-it
 pnpm
+release-it
+remark-cli
+remark-preset-webpro
 svgo
 tldr
 underscore-cli
