@@ -52,7 +52,6 @@ alias cd.='cd $(readlink -f .)'    # Go to real dir (i.e. if current dir is link
 
 alias b="bun"
 alias p="pnpm"
-alias y="yarn"
 alias ncu="npm-check-updates --interactive"
 alias ncuw="npm-check-updates --interactive --root --workspaces"
 
