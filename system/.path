@@ -29,6 +29,7 @@ prepend-path "$HOME/.cargo/bin"
 prepend-path "$HOME/.deno/bin"
 prepend-path "$HOME/.local/share/pnpm"
 prepend-path "$N_PREFIX/bin"
+prepend-path "/opt/homebrew/lib/ruby/gems/3.4.0/bin"
 
 # Custom
 prepend-path "$HOMEBREW_PREFIX/opt/postgresql@15/libexec/bin"
