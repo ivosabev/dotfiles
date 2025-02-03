@@ -68,6 +68,11 @@ export PATH="/usr/local/opt/php@5.6/sbin:$PATH"
 
 export PGDATA="$HOME/Sites/ufleet/data"###-begin-npm-completion-###
 
+export PATH="$HOME/.deno/env:$PATH"
+
+# Created by `pipx` on 2024-12-17 09:29:38
+export PATH="$PATH:$HOME/.local/bin"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
