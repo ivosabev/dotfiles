@@ -74,9 +74,8 @@ export PATH="$HOME/.deno/env:$PATH"
 export PATH="$PATH:$HOME/.local/bin"
 
 # NPM tokens
-source ~/.dotfiles/.env
+source ~/.dotfiles/.env && export $(cut -d= -f1 < ~/.dotfiles/.env)
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
