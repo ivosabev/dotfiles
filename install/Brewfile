@@ -37,6 +37,7 @@ brew "the_silver_searcher"
 # languages/tools
 brew "gh"
 brew "n"
+brew "pnpm"
 brew "python"
 brew "ruby"
 brew "rust"
