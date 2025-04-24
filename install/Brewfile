@@ -55,6 +55,7 @@ brew "m-cli"
 brew "mariadb"
 brew "postgresql@15"
 brew "redis"
+brew "tlrc"
 brew "vroom"
 brew "watchman"
 
