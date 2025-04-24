@@ -79,3 +79,6 @@ source ~/.dotfiles/.env && export $(cut -d= -f1 < ~/.dotfiles/.env)
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+export CPLUS_INCLUDE_PATH="/opt/homebrew/opt/openssl@1.1/include:/opt/homebrew/opt/asio/include:$CPLUS_INCLUDE_PATH"
+export LIBRARY_PATH="/opt/homebrew/opt/openssl@1.1/lib:/opt/homebrew/opt/asio/lib:$LIBRARY_PATH"
