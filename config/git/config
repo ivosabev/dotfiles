@@ -46,13 +46,13 @@
 [alias]
 	amend = commit --amend --reuse-message=HEAD
 	br = branch
+	c = clone
 	ci = commit
 	co = checkout
 	contrib = shortlog --summary --numbered
 	d = diff
 	diffstat = "!f() { if [ $# -eq 0 ]; then git show --shortstat HEAD | tail -1; else git show --shortstat $1 | tail -1; fi; }; f"
 	ds = -c delta.side-by-side=true diff
-	fc = "log --max-parents=0 --pretty=format:'%ad' --date=format:'%Y-%m-%d' -n 1"
 	fc = "log --max-parents=0 --pretty=format:'%ad' --date=format:'%Y-%m-%d' -n 1"
 	g = grep --break --heading --line-number
 	home = browse
