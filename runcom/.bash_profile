@@ -82,3 +82,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 export CPLUS_INCLUDE_PATH="/opt/homebrew/opt/openssl@1.1/include:/opt/homebrew/opt/asio/include:$CPLUS_INCLUDE_PATH"
 export LIBRARY_PATH="/opt/homebrew/opt/openssl@1.1/lib:/opt/homebrew/opt/asio/lib:$LIBRARY_PATH"
+
+eval "$(starship init bash)"
