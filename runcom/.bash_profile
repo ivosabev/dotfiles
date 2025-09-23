@@ -10,6 +10,8 @@ if [[ -n $CURRENT_SCRIPT && -x readlink ]]; then
   DOTFILES_DIR="${PWD}/$(dirname $(dirname $SCRIPT_PATH))"
 elif [ -d "$HOME/.dotfiles" ]; then
   DOTFILES_DIR="$HOME/.dotfiles"
+elif [ -d "$HOME/dotfiles" ]; then
+  DOTFILES_DIR="$HOME/dotfiles"
 else
   echo "Unable to find dotfiles, exiting."
   return
@@ -31,6 +33,7 @@ if is-macos; then
   done
 fi
 
+
 # Set LSCOLORS
 
 eval "$(dircolors -b "$DOTFILES_DIR"/system/.dir_colors)"
@@ -38,6 +41,7 @@ eval "$(dircolors -b "$DOTFILES_DIR"/system/.dir_colors)"
 # Wrap up
 
 unset CURRENT_SCRIPT SCRIPT_PATH DOTFILE
+
 export DOTFILES_DIR
 
 # Custom stuff

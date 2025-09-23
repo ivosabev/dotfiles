@@ -3,8 +3,6 @@
 
 is-executable getconf && PATH=$($(command -v getconf) PATH)
 
-export HOMEBREW_PREFIX=$($DOTFILES_DIR/bin/is-supported $DOTFILES_DIR/bin/is-arm64 /opt/homebrew /usr/local)
-
 prepend-path() {
   [ -d $1 ] && PATH="$1:$PATH"
 }
@@ -16,31 +14,11 @@ prepend-path "/sbin"
 prepend-path "/usr/bin"
 prepend-path "/usr/sbin"
 prepend-path "/usr/local/bin"
-prepend-path "$HOMEBREW_PREFIX/bin"
-prepend-path "$HOMEBREW_PREFIX/sbin"
-prepend-path "$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin"
-prepend-path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
-prepend-path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
-prepend-path "$HOMEBREW_PREFIX/opt/python/libexec/bin"
-prepend-path "$HOMEBREW_PREFIX/opt/ruby/bin"
 prepend-path "$DOTFILES_DIR/bin"
-prepend-path "$HOME/.bun/bin"
-prepend-path "$HOME/.cargo/bin"
-prepend-path "$HOME/.deno/bin"
-prepend-path "$HOME/.local/share/pnpm"
-prepend-path "$N_PREFIX/bin"
-prepend-path "/opt/homebrew/lib/ruby/gems/3.4.0/bin"
 
-# Custom
-prepend-path "$HOMEBREW_PREFIX/opt/postgresql@15/libexec/bin"
-# prepend-path "/Users/ivolution/Library/Android/sdk/tools"
-# prepend-path "/Users/ivolution/Library/Android/sdk/platform-tools"
+is-macos && . "$DOTFILES_DIR/system/.path.macos"
 
-# Remove duplicates (preserving prepended items)
-# Source: http://unix.stackexchange.com/a/40755
-
+# Remove duplicates
 PATH=$(echo -n $PATH | awk -v RS=: '{ if (!arr[$0]++) {printf("%s%s",!ln++?"":":",$0)}}')
-
-# Wrap up
 
 export PATH

@@ -1,6 +1,6 @@
 DOTFILES_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-OS := $(shell bin/is-supported bin/is-macos macos linux)
-HOMEBREW_PREFIX := $(shell bin/is-supported bin/is-macos $(shell bin/is-supported bin/is-arm64 /opt/homebrew /usr/local) /home/linuxbrew/.linuxbrew)
+OS := $(shell bin/is-supported bin/is-macos macos $(shell bin/is-supported bin/is-ubuntu ubuntu $(shell bin/is-supported bin/is-arch arch linux)))
+HOMEBREW_PREFIX := $(shell bin/is-supported bin/is-arm64 /opt/homebrew /usr/local)
 export N_PREFIX = $(HOME)/.n
 PATH := $(HOMEBREW_PREFIX)/bin:$(DOTFILES_DIR)/bin:$(N_PREFIX)/bin:$(PATH)
 SHELL := env PATH=$(PATH) /bin/bash
@@ -9,28 +9,35 @@ BIN := $(HOMEBREW_PREFIX)/bin
 export XDG_CONFIG_HOME = $(HOME)/.config
 export STOW_DIR = $(DOTFILES_DIR)
 export ACCEPT_EULA=Y
-export HOMEBREW_CASK_OPTS=--no-quarantine
 
+.PHONY: test
 
-.PHONY: all
 all: $(OS)
 
-macos: sudo core-macos packages link duti bun
+macos: sudo core-macos packages-macos link duti bun
 
-linux: core-linux link bun
+ubuntu: core-ubuntu link
 
-core-macos: brew bash git java npm
+arch: core-arch packages-arch link
 
-core-linux:
+core-macos: brew bash git npm
+
+core-ubuntu:
 	apt-get update
 	apt-get upgrade -y
 	apt-get dist-upgrade -f
 
-stow-macos: brew
-	is-executable stow || $(BIN)/brew install stow
-
-stow-linux: core-linux
+stow-ubuntu: core-ubuntu
 	is-executable stow || apt-get -y install stow
+
+core-arch:
+	pacman -Syu --noconfirm
+
+stow-arch: core-arch
+	is-executable stow || pacman -S --noconfirm stow
+
+stow-macos: brew
+	is-executable stow || brew install stow
 
 sudo:
 ifndef GITHUB_ACTION
@@ -38,10 +45,6 @@ ifndef GITHUB_ACTION
 	while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 endif
 
-.PHONY: packages
-packages: brew-packages cask-apps node-packages rust-packages java
-
-.PHONY: link
 link: stow-$(OS)
 	for FILE in $$(\ls -A runcom); do if [ -f $(HOME)/$$FILE -a ! -h $(HOME)/$$FILE ]; then \
 		mv -v $(HOME)/$$FILE{,.bak}; fi; done
@@ -58,11 +61,8 @@ unlink: stow-$(OS)
 		mv -v $(HOME)/$$FILE.bak $(HOME)/$${FILE%%.bak}; fi; done
 
 brew:
-	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
+	is-executable brew || curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
 
-.PHONY: bash
-bash: BASH=/opt/homebrew/bin/bash
-bash: SHELLS=/private/etc/shells
 bash: brew
 ifdef GITHUB_ACTION
 	if ! grep -q bash $(SHELLS); then \
@@ -79,13 +79,20 @@ else
 endif
 
 git: brew
-	$(BIN)/brew install git git-extras
+	brew install git git-extras
+
+npm: brew-packages
+	n install lts
 
 java: brew-packages
 	curl -s "https://get.sdkman.io" | bash
 
-npm: brew-packages
-	n install lts
+packages-macos: brew-packages cask-apps node-packages rust-packages java
+
+packages-arch: pacman-packages
+
+pacman-packages:
+	pacman -S --noconfirm - < $(DOTFILES_DIR)/install/pacmanfile
 
 brew-packages: brew
 	brew bundle --file=$(DOTFILES_DIR)/install/Brewfile || true

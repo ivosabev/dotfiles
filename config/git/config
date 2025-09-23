@@ -7,7 +7,9 @@
 
 [core]
   excludesfile = ~/.config/git/ignore
-  editor = s -n -w
+  # editor = s -n -w
+  # editor = code --wait
+  editor = git-editor
   filemode = false
   trustctime = false
   autocrlf = input

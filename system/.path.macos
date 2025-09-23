@@ -1,0 +1,22 @@
+export HOMEBREW_PREFIX=$($DOTFILES_DIR/bin/is-supported $DOTFILES_DIR/bin/is-arm64 /opt/homebrew /usr/local)
+
+# Prepend new items to path (if directory exists)
+
+prepend-path "$HOMEBREW_PREFIX/bin"
+prepend-path "$HOMEBREW_PREFIX/sbin"
+prepend-path "$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin"
+prepend-path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
+prepend-path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+prepend-path "$HOMEBREW_PREFIX/opt/python/libexec/bin"
+prepend-path "$HOMEBREW_PREFIX/opt/ruby/bin"
+prepend-path "$HOME/.bun/bin"
+prepend-path "$HOME/.cargo/bin"
+prepend-path "$HOME/.local/share/pnpm"
+prepend-path "$N_PREFIX/bin"
+
+# Custom
+prepend-path "$HOME/.deno/bin"
+prepend-path "$HOMEBREW_PREFIX/opt/postgresql@15/libexec/bin"
+# prepend-path "/Users/ivolution/Library/Android/sdk/tools"
+# prepend-path "/Users/ivolution/Library/Android/sdk/platform-tools"
+# prepend-path "/opt/homebrew/lib/ruby/gems/3.4.0/bin"
