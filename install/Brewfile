@@ -15,6 +15,8 @@ brew "topgrade"
 # fs/network
 brew "bat"
 # brew "croc"
+brew "croc"
+brew "eza"
 brew "httpie"
 brew "ssh-copy-id"
 brew "tree"
@@ -35,6 +37,7 @@ brew "ripgrep"
 brew "the_silver_searcher"
 
 # languages/tools
+brew "cmake"
 brew "gh"
 brew "n"
 brew "pnpm"
@@ -45,6 +48,7 @@ brew "rust"
 # media
 brew "ffmpeg"
 brew "imagemagick"
+brew "optipng"
 brew "uni"
 brew "webp"
 
