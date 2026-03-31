@@ -8,3 +8,87 @@ function git() {
     command git "$@"
   fi
 }
+
+function git-stats() {
+set -euo pipefail
+
+# Usage:
+#   bash git-lines-by-month-stream.sh
+#   bash git-lines-by-month-stream.sh /path/repo
+#   bash git-lines-by-month-stream.sh --all
+#   bash git-lines-by-month-stream.sh /path/repo --all
+
+REPO="."
+REV="HEAD"
+
+if [[ "${1:-}" == "--all" ]]; then
+  REV="--all"
+elif [[ -n "${1:-}" ]]; then
+  REPO="$1"
+  if [[ "${2:-}" == "--all" ]]; then
+    REV="--all"
+  fi
+fi
+
+cd "$REPO"
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "Error: not a git repo: $REPO" >&2
+  exit 1
+fi
+
+# GNU date (Linux: date, macOS: gdate)
+DATECMD="date"
+if ! date -d "1970-01-01" +%Y-%m-%d >/dev/null 2>&1; then
+  if command -v gdate >/dev/null 2>&1; then
+    DATECMD="gdate"
+  else
+    echo "Error: GNU date required (brew install coreutils)" >&2
+    exit 1
+  fi
+fi
+
+# Colors (TTY only)
+GREEN="" RED="" RESET=""
+if [[ -t 1 ]]; then
+  GREEN=$'\033[32m'
+  RED=$'\033[31m'
+  RESET=$'\033[0m'
+fi
+
+# Column widths
+W_MONTH=7
+W_COMMITS=8
+W_LINES=10
+
+printf "%-*s %*s %*s %*s\n" \
+  "$W_MONTH" "YYYY-MM" \
+  "$W_COMMITS" "COMMITS" \
+  "$W_LINES" "+LINES" \
+  "$W_LINES" "-LINES"
+
+# DESCENDING order: current month → 11 months ago
+for i in $(seq 0 21); do
+  month="$($DATECMD -d "$($DATECMD +%Y-%m-01) -${i} months" +%Y-%m)"
+  start="$($DATECMD -d "${month}-01" +%Y-%m-%d)"
+  end="$($DATECMD -d "${month}-01 +1 month" +%Y-%m-%d)"
+
+  # Commit count (correct)
+  commits="$(git rev-list $REV --count --since="$start" --before="$end" 2>/dev/null || echo 0)"
+
+  # Lines added / removed
+  read -r added deleted < <(
+    git log $REV --since="$start" --before="$end" \
+      --numstat --no-renames --pretty=tformat: 2>/dev/null \
+    | awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { a+=$1; d+=$2 }
+           END { printf "%d %d\n", a+0, d+0 }'
+  )
+
+  printf "%-*s %*d %s%*d%s %s%*d%s\n" \
+    "$W_MONTH" "$month" \
+    "$W_COMMITS" "${commits:-0}" \
+    "$GREEN" "$W_LINES" "${added:-0}" "$RESET" \
+    "$RED"   "$W_LINES" "${deleted:-0}" "$RESET"
+done
+
+}
