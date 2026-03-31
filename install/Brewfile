@@ -65,3 +65,7 @@ brew "watchman"
 
 # brew "git"
 # brew "git-extras"
+
+# misc
+brew "grip"
+brew "mole"
