@@ -81,6 +81,12 @@ export PATH="$PATH:$HOME/.local/bin"
 # NPM tokens
 source ~/.dotfiles/.env && export $(cut -d= -f1 < ~/.dotfiles/.env)
 
+# Set Ruby
+export PATH="$HOMEBREW_PREFIX/opt/ruby/bin:$PATH"
+export RUBY_API_VERSION="$(ruby -e 'print RbConfig::CONFIG["ruby_version"]')"
+export GEM_HOME="$HOMEBREW_PREFIX/lib/ruby/gems/$RUBY_API_VERSION"
+export GEM_PATH="$GEM_HOME"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
