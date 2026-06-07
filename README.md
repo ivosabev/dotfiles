@@ -13,7 +13,7 @@ Mainly targets macOS systems, but works on Ubuntu and Arch Linux as well.
 - Well-organized and easy to customize
 - The installation and runcom setup is
   [tested weekly on real Ubuntu and macOS machines](https://github.com/webpro/dotfiles/actions)
-  (Ventura/13, Sonomo/14, Sequoia/15) using [a GitHub Action](./.github/workflows/dotfiles-installation.yml)
+  (Sonoma/14, Sequoia/15, Tahoe/26) using [a GitHub Action](./.github/workflows/dotfiles-installation.yml)
 - Supports both Apple Silicon (M1) and Intel chips
 
 ## Packages Overview
@@ -68,6 +68,7 @@ Running `make` with the Makefile is idempotent. The installation process in the 
 git config --global user.name "your name"
 git config --global user.email "your@email.com"
 git config --global github.user "your-github-username"
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
 ```
 
 2. Set macOS [Dock items](./macos/dock.sh) and [system defaults](./macos/defaults.sh):
@@ -77,10 +78,10 @@ dot dock
 dot macos
 ```
 
-3. Populate this file with tokens (example: `export GITHUB_TOKEN=abc`):
+1. Populate this file with anything you need sourced in each shell:
 
 ```sh
-touch ~/.dotfiles/system/.exports
+touch ~/.dotfiles/local/.profile
 ```
 
 ## The `dot` command
