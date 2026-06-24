@@ -52,8 +52,6 @@ export HOMEBREW_CASK_OPTS=--no-quarantine
 
 export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 
-export JAVA_HOME="${SDKMAN_CANDIDATES_DIR}/java/current/"
-
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export ANDROID_NDK_HOME=$ANDROID_HOME/ndk
@@ -90,6 +88,7 @@ export GEM_PATH="$GEM_HOME"
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+[ -f "$DOTFILES_DIR/system/macos/.java" ] && . "$DOTFILES_DIR/system/macos/.java"
 
 export CPLUS_INCLUDE_PATH="/opt/homebrew/opt/openssl@1.1/include:/opt/homebrew/opt/asio/include:$CPLUS_INCLUDE_PATH"
 export LIBRARY_PATH="/opt/homebrew/opt/openssl@1.1/lib:/opt/homebrew/opt/asio/lib:$LIBRARY_PATH"
