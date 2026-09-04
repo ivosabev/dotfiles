@@ -3,8 +3,9 @@
 [misc]
   assume_yes = true
   cleanup = true
-  disable = ["containers", "git_repos", "node", "pnpm", "yarn", "uv"]
+  disable = ["containers", "git_repos", "node", "pnpm", "yarn", "uv", "skills"]
   display_time = false
 
 [commands]
-  "npm" = "npm update --location global --force"
+  "npm" = 'cd "$HOME" && npm update --location global --allow-remote=all'
+  "Skills" = 'cd "$HOME" && npx --yes skills update --global'
