@@ -94,3 +94,4 @@ export CPLUS_INCLUDE_PATH="/opt/homebrew/opt/openssl@1.1/include:/opt/homebrew/o
 export LIBRARY_PATH="/opt/homebrew/opt/openssl@1.1/lib:/opt/homebrew/opt/asio/lib:$LIBRARY_PATH"
 
 eval "$(starship init bash)"
+export PATH=$PATH:$HOME/.maestro/bin
