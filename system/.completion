@@ -46,6 +46,24 @@ if is-executable git; then
 fi
 
 # pnpm (https://pnpm.io/completion)
+# pnpm 11+ completion-server omits package.json scripts at the first argument.
+# Tabtab used to complete `p tes<tab>` → `test`; restore that here.
+
+_pnpm_scripts() {
+  local cur="$1"
+  [ -f package.json ] || return 0
+  python3 -c '
+import json, sys
+cur = sys.argv[1]
+try:
+    scripts = json.load(open("package.json")).get("scripts") or {}
+except Exception:
+    raise SystemExit(0)
+for name in scripts:
+    if name.startswith(cur):
+        print(name)
+' "$cur" 2>/dev/null
+}
 
 _pnpm_completion () {
   local words cword
@@ -69,8 +87,21 @@ _pnpm_completion () {
     COMPREPLY=($(compgen -f -- "$cword"))
   fi
 
+  # First arg (`p tes<tab>`) and `run` / `run-script` (`p run <tab>`).
+  # pnpm 11/12 completion-server often returns no package.json scripts here.
+  local prev=""
+  [ "$cword" -gt 0 ] && prev="${words[cword-1]}"
+  if [ "$cword" -eq 1 ] || [ "$prev" = "run" ] || [ "$prev" = "run-script" ]; then
+    local script
+    while IFS= read -r script; do
+      [ -n "$script" ] && COMPREPLY+=("$script")
+    done < <(_pnpm_scripts "${words[cword]}")
+  fi
+
   if type __ltrim_colon_completions &>/dev/null; then
     __ltrim_colon_completions "${words[cword]}"
   fi
 }
 complete -o default -F _pnpm_completion pnpm p
+# `p` is an alias for pnpm; let the alias inherit the same spec if bash looks up `pnpm`.
+shopt -s progcomp_alias 2>/dev/null || true
