@@ -65,6 +65,14 @@ for name in scripts:
 ' "$cur" 2>/dev/null
 }
 
+_pnpm_redraw_line() {
+  # Cursor/VS Code + Starship often apply COMPREPLY without redrawing PS1.
+  # Same DSR trick fzf uses: terminal replies \e[0n → redraw-current-line.
+  [[ -o interactive && -t 0 ]] || return 0
+  bind '"\e[0n": redraw-current-line' 2>/dev/null || true
+  builtin printf '\e[5n'
+}
+
 _pnpm_completion () {
   local words cword
   if type _get_comp_words_by_ref &>/dev/null; then
@@ -74,33 +82,50 @@ _pnpm_completion () {
     words=("${COMP_WORDS[@]}")
   fi
 
-  local si="$IFS"
-  IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
-                          COMP_LINE="$COMP_LINE" \
-                          COMP_POINT="$COMP_POINT" \
-                          SHELL=bash \
-                          pnpm completion-server -- "${words[@]}" \
-                          2>/dev/null)) || return $?
-  IFS="$si"
+  local cur="${words[cword]}"
+  local prev=""
+  [ "$cword" -gt 0 ] && prev="${words[cword-1]}"
 
-  if [ "$COMPREPLY" = "__tabtab_complete_files__" ]; then
-    COMPREPLY=($(compgen -f -- "$cword"))
+  COMPREPLY=()
+
+  # completion-server returns no package.json scripts after `run`, and Node
+  # on a TTY stdin leaves readline's visible line stale after Tab.
+  if [ "$prev" != "run" ] && [ "$prev" != "run-script" ]; then
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                            COMP_LINE="$COMP_LINE" \
+                            COMP_POINT="$COMP_POINT" \
+                            SHELL=bash \
+                            pnpm completion-server -- "${words[@]}" \
+                            </dev/null 2>/dev/null)) || true
+    IFS="$si"
+    if [ "$COMPREPLY" = "__tabtab_complete_files__" ]; then
+      COMPREPLY=($(compgen -f -- "$cur"))
+    fi
   fi
 
   # First arg (`p tes<tab>`) and `run` / `run-script` (`p run <tab>`).
-  # pnpm 11/12 completion-server often returns no package.json scripts here.
-  local prev=""
-  [ "$cword" -gt 0 ] && prev="${words[cword-1]}"
   if [ "$cword" -eq 1 ] || [ "$prev" = "run" ] || [ "$prev" = "run-script" ]; then
     local script
     while IFS= read -r script; do
       [ -n "$script" ] && COMPREPLY+=("$script")
-    done < <(_pnpm_scripts "${words[cword]}")
+    done < <(_pnpm_scripts "$cur")
   fi
 
   if type __ltrim_colon_completions &>/dev/null; then
-    __ltrim_colon_completions "${words[cword]}"
+    __ltrim_colon_completions "$cur"
   fi
+
+  if [ ${#COMPREPLY[@]} -gt 0 ]; then
+    local cleaned item
+    cleaned=$(printf '%s\n' "${COMPREPLY[@]}" | awk 'NF && !seen[$0]++')
+    COMPREPLY=()
+    while IFS= read -r item; do
+      [ -n "$item" ] && COMPREPLY+=("$item")
+    done <<< "$cleaned"
+  fi
+
+  _pnpm_redraw_line
 }
 complete -o default -F _pnpm_completion pnpm p
 # `p` is an alias for pnpm; let the alias inherit the same spec if bash looks up `pnpm`.
