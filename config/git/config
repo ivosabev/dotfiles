@@ -70,6 +70,7 @@
 	rv = remote -vv
 	s = status
 	show-ignored = !git clean -ndX | perl -pe 's/Would remove //'
+	si = "!f() { t=0; if [ -t 1 ]; then t=1; fi; git log -n 20 --pretty=format:'%h%x09%G?%x09%an%x09%s' \"$@\" | awk -F'\\t' -v t=$t 'BEGIN{m[\"G\"]=\"signed\";m[\"U\"]=\"untrusted\";m[\"X\"]=\"expired-sig\";m[\"Y\"]=\"expired-key\";m[\"R\"]=\"revoked-key\";m[\"B\"]=\"BAD sig\";m[\"E\"]=\"unverifiable\";m[\"N\"]=\"unsigned\"}{l=(($2 in m)?m[$2]:$2);c=(($2==\"G\")?\"\\033[32m\":(($2==\"B\"||$2==\"E\"||$2==\"N\")?\"\\033[31m\":\"\\033[33m\"));if(t)printf \"\\033[33m%s\\033[0m %s%-12s\\033[0m \\033[2m%-16.16s\\033[0m %s\\n\",$1,c,l,$3,$4;else printf \"%s %-12s %-16.16s %s\\n\",$1,l,$3,$4}'; }; f"
 	squash-all = "!f() { git reset $(git commit-tree HEAD^{tree} -m \"${1:-Initial commit}\"); }; f"
 	squash-branch = "!f() { base=$(git merge-base HEAD \"${1:-main}\"); first=$(git rev-list --reverse \"$base\"..HEAD | head -1); git reset --soft \"$base\" && git commit -C \"$first\"; }; f"
 	sshort = "!f() { git show --shortstat \"${1:-HEAD}\" | awk \"/files? changed/ { gsub(/,/, \\\"\\\", \\$4); gsub(/,/, \\\"\\\", \\$6); print \\\"\\033[32m+\\\" \\$4 \\\" \\033[31m-\\\" \\$6 \\\"\\033[0m\\\" }\"; }; f"
