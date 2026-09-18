@@ -24,6 +24,7 @@ PATH="$DOTFILES_DIR/bin:$PATH"
 # Source the dotfiles (order matters)
 
 [ -f "$DOTFILES_DIR/local/.profile" ] && . "$DOTFILES_DIR/local/.profile"
+[ -f "$DOTFILES_DIR/local/.env" ] && . "$DOTFILES_DIR/local/.env"
 
 for DOTFILE in "$DOTFILES_DIR"/system/.{function,function_*,n,path,env,alias,fzf,grep,prompt,completion,fix,pnpm,zoxide}; do
   . "$DOTFILE"
