@@ -57,6 +57,7 @@ brew "rust"
 brew "ffmpeg"
 brew "imagemagick"
 brew "optipng"
+brew "poppler"
 brew "uni"
 brew "webp"
 
