@@ -71,17 +71,6 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   exit 1
 fi
 
-# GNU date (Linux: date, macOS: gdate)
-DATECMD="date"
-if ! date -d "1970-01-01" +%Y-%m-%d >/dev/null 2>&1; then
-  if command -v gdate >/dev/null 2>&1; then
-    DATECMD="gdate"
-  else
-    echo "Error: GNU date required (brew install coreutils)" >&2
-    exit 1
-  fi
-fi
-
 # Colors (TTY only)
 GREEN="" RED="" RESET=""
 if [[ -t 1 ]]; then
@@ -91,38 +80,198 @@ if [[ -t 1 ]]; then
 fi
 
 # Column widths
-W_MONTH=7
-W_COMMITS=8
-W_LINES=10
+W_MONTH=3
+W_COMMITS=7
+W_LINES=9
+W_V1=6
+W_V2=6
+W_TREND=7
+MONTHS=18
+RECENT_WINDOW=3
+NORM_WINDOW=12
+CHART_PADDING=2
+CHART_HEIGHT=$((MONTHS - 1 - CHART_PADDING))
 
-printf "%-*s %*s %*s %*s\n" \
-  "$W_MONTH" "YYYY-MM" \
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/git-stats/v4"
+# Generated, vendored and lock files, left out of line counts
+EXCLUDE=(
+  ':(exclude,glob)**/build/**' ':(exclude,glob)**/dist/**' ':(exclude,glob)**/out/**'
+  ':(exclude,glob)**/.next/**' ':(exclude,glob)**/node_modules/**' ':(exclude,glob)**/vendor/**'
+  ':(exclude,glob)**/coverage/**' ':(exclude,glob)**/generated/**' ':(exclude,glob)**/__generated__/**'
+  ':(exclude,glob)**/prisma/client/**'
+  ':(exclude,glob)**/*.min.js' ':(exclude,glob)**/*.min.css' ':(exclude,glob)**/*.map'
+  ':(exclude,glob)**/*.snap' ':(exclude,glob)**/*.gen.*'
+  ':(exclude,glob)**/package-lock.json' ':(exclude,glob)**/pnpm-lock.yaml' ':(exclude,glob)**/yarn.lock'
+  ':(exclude,glob)**/bun.lock' ':(exclude,glob)**/bun.lockb' ':(exclude,glob)**/composer.lock'
+  ':(exclude,glob)**/Gemfile.lock' ':(exclude,glob)**/Cargo.lock' ':(exclude,glob)**/poetry.lock'
+  ':(exclude,glob)**/go.sum'
+)
+MONTH_NAMES=(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+N=$((MONTHS + RECENT_WINDOW - 1 + NORM_WINDOW))
+
+read -r year month day < <(date "+%Y %-m %-d")
+
+# DESCENDING order: current month → MONTHS-1 months ago, plus older months
+# that only feed the trend baseline. days[i] is the days elapsed in month i.
+months=() labels=() days=() commits=() shas=() added=() deleted=()
+for ((i = 0; i < N; i++)); do
+  ym=$((year * 12 + month - 1 - i))
+  y=$((ym / 12)) m=$((ym % 12 + 1))
+  printf -v "months[i]" "%04d-%02d" $y $m
+  labels[i]=${MONTH_NAMES[m - 1]}
+  case $m in
+    2) days[i]=$(( y % 4 == 0 && (y % 100 != 0 || y % 400 == 0) ? 29 : 28 )) ;;
+    4|6|9|11) days[i]=30 ;;
+    *) days[i]=31 ;;
+  esac
+  commits[i]=0 shas[i]="" added[i]=0 deleted[i]=0
+done
+# length is the calendar length. days[0] becomes days elapsed, for the projection.
+length=("${days[@]}")
+days[0]=$day
+ym=$((year * 12 + month))
+printf -v next_month "%04d-%02d-01 00:00:00" $((ym / 12)) $((ym % 12 + 1))
+
+while read -r ym sha; do
+  i=$(( year * 12 + month - 10#${ym#*-} - ${ym%-*} * 12 ))
+  commits[i]=$((commits[i] + 1))
+  shas[i]+="$sha"$'\n'
+done < <(git log $REV --since="${months[N - 1]}-01 00:00:00" --before="$next_month" \
+  --date=format-local:%Y-%m --pretty=tformat:'%cd %H')
+
+# Line counts are cached per month, keyed by the hash of its commit list and
+# the exclude list, and missing months are diffed in parallel.
+mkdir -p "$CACHE_DIR"
+keys=()
+for ((i = 0; i < MONTHS; i++)); do
+  (( commits[i] > 0 )) || continue
+  keys[i]="$(printf '%s\n' "${shas[i]}" "${EXCLUDE[@]}" | git hash-object --stdin)"
+  cache="$CACHE_DIR/${keys[i]}"
+  [[ -f "$cache" ]] && continue
+  (
+    printf '%s' "${shas[i]}" \
+    | git log --no-walk=unsorted --stdin --numstat --no-renames --pretty=tformat: -- . "${EXCLUDE[@]}" \
+    | awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { a += $1; d += $2 }
+           END { printf "%d %d\n", a, d }' >"$cache.$$" \
+    && mv "$cache.$$" "$cache"
+  ) &
+done
+wait
+
+for ((i = 0; i < MONTHS; i++)); do
+  (( commits[i] > 0 )) || continue
+  read -r "added[i]" "deleted[i]" <"$CACHE_DIR/${keys[i]}"
+done
+
+# Table on the left, commits bar chart (oldest month first) on the right
+table=()
+widths=("$W_MONTH" "$W_COMMITS" "$W_LINES" "$W_LINES" "$W_V1" "$W_V2" "$W_TREND")
+top="┌" mid="├" bottom="└"
+for ((c = 0; c < ${#widths[@]}; c++)); do
+  printf -v seg "%*s" $((widths[c] + 2)) ""
+  seg=${seg// /─}
+  if (( c < ${#widths[@]} - 1 )); then
+    top+="$seg┬" mid+="$seg┼" bottom+="$seg┴"
+  else
+    top+="$seg┐" mid+="$seg┤" bottom+="$seg┘"
+  fi
+done
+
+printf -v header "│ %-*s │ %*s │ %*s │ %*s │ %*s │ %*s │ %*s │" \
+  "$W_MONTH" "MON" \
   "$W_COMMITS" "COMMITS" \
   "$W_LINES" "+LINES" \
-  "$W_LINES" "-LINES"
+  "$W_LINES" "-LINES" \
+  "$W_V1" "V1" \
+  "$W_V2" "V2" \
+  "$W_TREND" "TREND"
+table+=("$top" "$header" "$mid")
 
-# DESCENDING order: current month → 11 months ago
-for i in $(seq 0 21); do
-  month="$($DATECMD -d "$($DATECMD +%Y-%m-01) -${i} months" +%Y-%m)"
-  start="$($DATECMD -d "${month}-01" +%Y-%m-%d)"
-  end="$($DATECMD -d "${month}-01 +1 month" +%Y-%m-%d)"
+# V2: pace projected onto an average-length month (30.44 days).
+# V1: that projection divided by the calendar length of the month.
+# For the current month, the projection uses the days elapsed so far.
+# TREND uses the unrounded daily rate: average of the last RECENT_WINDOW
+# months vs the median of the NORM_WINDOW months before them.
+velocity=()
+for ((i = 0; i < N; i++)); do
+  velocity[i]=$(( (commits[i] * 10 * 2 + days[i]) / (2 * days[i]) ))
+done
 
-  # Commit count (correct)
-  commits="$(git rev-list $REV --count --since="$start" --before="$end" 2>/dev/null || echo 0)"
+for ((i = 0; i < MONTHS; i++)); do
+  monthly=$(( (commits[i] * 3044 * 2 / 10 + days[i]) / (2 * days[i]) ))
+  v2=$(( (monthly + 5) / 10 ))
+  v1=$(( (v2 * 2 + length[i]) / (2 * length[i]) ))
 
-  # Lines added / removed
-  read -r added deleted < <(
-    git log $REV --since="$start" --before="$end" \
-      --numstat --no-renames --pretty=tformat: 2>/dev/null \
-    | awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { a+=$1; d+=$2 }
-           END { printf "%d %d\n", a+0, d+0 }'
-  )
+  recent=0
+  for ((j = i; j < i + RECENT_WINDOW; j++)); do recent=$((recent + velocity[j])); done
+  sorted=($(printf '%s\n' "${velocity[@]:i+RECENT_WINDOW:NORM_WINDOW}" | sort -n))
+  # twice the median, so even-sized windows stay in integer math
+  median2=$(( sorted[(NORM_WINDOW - 1) / 2] + sorted[NORM_WINDOW / 2] ))
 
-  printf "%-*s %*d %s%*d%s %s%*d%s\n" \
-    "$W_MONTH" "$month" \
-    "$W_COMMITS" "${commits:-0}" \
-    "$GREEN" "$W_LINES" "${added:-0}" "$RESET" \
-    "$RED"   "$W_LINES" "${deleted:-0}" "$RESET"
+  color=""
+  if (( median2 == 0 )); then
+    if (( recent > 0 )); then trend="new"; else trend="-"; fi
+  else
+    num=$((recent * 2 * 100)) den=$((median2 * RECENT_WINDOW))
+    pct=$(( (2 * num + den) / (2 * den) - 100 ))
+    if (( pct > 0 )); then trend="+${pct}%" color=$GREEN
+    elif (( pct < 0 )); then trend="${pct}%" color=$RED
+    else trend="0%"
+    fi
+  fi
+
+  printf -v row "│ %-*s │ %*d │ %s%*d%s │ %s%*d%s │ %*d │ %*d │ %s%*s%s │" \
+    "$W_MONTH" "${labels[i]}" \
+    "$W_COMMITS" "${commits[i]}" \
+    "$GREEN" "$W_LINES" "${added[i]}" "$RESET" \
+    "$RED"   "$W_LINES" "${deleted[i]}" "$RESET" \
+    "$W_V1" "$v1" \
+    "$W_V2" "$v2" \
+    "$color" "$W_TREND" "$trend" "$RESET"
+  table+=("$row")
+done
+
+max=1
+for ((i = 0; i < MONTHS; i++)); do if (( commits[i] > max )); then max=${commits[i]}; fi; done
+
+ctop="┌" cmid="├" cbottom="└"
+for ((i = 0; i < MONTHS; i++)); do
+  if (( i < MONTHS - 1 )); then
+    ctop+="──────" cmid+="─────┬" cbottom+="─────┴"
+  else
+    ctop+="─────┐" cmid+="─────┤" cbottom+="─────┘"
+  fi
+done
+
+chart=("$ctop")
+printf -v blank "│%*s│" $((MONTHS * 6 - 1)) ""
+for ((i = 0; i < CHART_PADDING; i++)); do chart+=("$blank"); done
+for ((row = CHART_HEIGHT + 1; row >= 1; row--)); do
+  line="│"
+  for ((i = MONTHS - 1; i >= 0; i--)); do
+    if (( i > 0 )); then sep=" "; else sep="│"; fi
+    h=$(( (commits[i] * CHART_HEIGHT + max - 1) / max ))
+    if (( h >= row )); then
+      line+=" ${GREEN}███${RESET} $sep"
+    elif (( h == row - 1 )); then
+      printf -v cell "%4d %s" "${commits[i]}" "$sep"
+      line+=$cell
+    else
+      line+="     $sep"
+    fi
+  done
+  chart+=("$line")
+done
+line="│"
+for ((i = MONTHS - 1; i >= 0; i--)); do
+  line+=" ${labels[i]} │"
+done
+chart+=("$cmid" "$line" "$cbottom")
+
+table+=("$bottom")
+
+for ((i = 0; i < ${#chart[@]}; i++)); do
+  echo "${table[i]} ${chart[i]}"
 done
 
 }
