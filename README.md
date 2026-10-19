@@ -22,7 +22,7 @@ Mainly targets macOS systems, but works on Ubuntu and Arch Linux as well.
 - [homebrew-cask](https://github.com/Homebrew/homebrew-cask) (packages: [Caskfile](./install/Caskfile))
 - [Node.js + npm LTS](https://nodejs.org/en/download/) (packages: [npmfile](./install/npmfile))
 - Latest Git, Bash, Python, GNU coreutils, curl, Ruby
-- Editors: VS Code and nano (`EDITOR`, `VISUAL` and Git `core.editor`)
+- Editors: Cursor and nano (`EDITOR`, `VISUAL`)
 
 ## Installation
 

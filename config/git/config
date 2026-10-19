@@ -81,25 +81,32 @@
 	renames = copies
 	indentHeuristic = true
 	colorMoved = default
-	tool = vscode
+	tool = cursor
 
 [difftool]
   prompt = false
 
+[difftool "cursor"]
+	cmd = cursor --wait --diff $LOCAL $REMOTE
+
 [difftool "sourcetree"]
-	cmd = code --wait --diff $LOCAL $REMOTE
+	cmd = cursor --wait --diff $LOCAL $REMOTE
 	path =
 
 [merge]
 	conflictstyle = diff3
 	defaultToUpstream = true
-	tool = vscode
+	tool = cursor
 
 [mergetool]
   prompt = false
 
+[mergetool "cursor"]
+	cmd = cursor --wait $MERGED
+	trustExitCode = true
+
 [mergetool "sourcetree"]
-	cmd = code --wait $MERGED
+	cmd = cursor --wait $MERGED
 	trustExitCode = true
 
 [delta]
