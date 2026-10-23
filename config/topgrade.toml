@@ -8,6 +8,7 @@
     "git_repos",
     "node",
     "pnpm",
+    "ruby_gems",
     "skills",
     "system",
     "uv",
