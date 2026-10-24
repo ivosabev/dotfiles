@@ -143,20 +143,33 @@ done < <(git log $REV --since="${months[N - 1]}-01 00:00:00" --before="$next_mon
 # the exclude list, and missing months are diffed in parallel.
 mkdir -p "$CACHE_DIR"
 keys=()
+pending=()
 for ((i = 0; i < MONTHS; i++)); do
   (( commits[i] > 0 )) || continue
   keys[i]="$(printf '%s\n' "${shas[i]}" "${EXCLUDE[@]}" | git hash-object --stdin)"
   cache="$CACHE_DIR/${keys[i]}"
   [[ -f "$cache" ]] && continue
-  (
-    printf '%s' "${shas[i]}" \
-    | git log --no-walk=unsorted --stdin --numstat --no-renames --pretty=tformat: -- . "${EXCLUDE[@]}" \
-    | awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { a += $1; d += $2 }
-           END { printf "%d %d\n", a, d }' >"$cache.$$" \
-    && mv "$cache.$$" "$cache"
-  ) &
+  pending+=("$i")
 done
-wait
+
+# The function runs in the interactive shell. Background jobs started here
+# would be announced ([n] pid / Done). A subshell with monitor off keeps them quiet.
+if (( ${#pending[@]} )); then
+  (
+    set +m
+    for i in "${pending[@]}"; do
+      cache="$CACHE_DIR/${keys[i]}"
+      (
+        printf '%s' "${shas[i]}" \
+        | git log --no-walk=unsorted --stdin --numstat --no-renames --pretty=tformat: -- . "${EXCLUDE[@]}" \
+        | awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { a += $1; d += $2 }
+               END { printf "%d %d\n", a, d }' >"$cache.$$" \
+        && mv "$cache.$$" "$cache"
+      ) &
+    done
+    wait
+  )
+fi
 
 for ((i = 0; i < MONTHS; i++)); do
   (( commits[i] > 0 )) || continue
