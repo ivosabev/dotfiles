@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! agent=$(command -v cursor-agent); then
+  echo "cursor-agent is not installed, skipping."
+  exit 0
+fi
+
+output=$(mktemp)
+trap 'rm -f "$output"' EXIT
+
+set +e
+set +o pipefail
+"$agent" update 2>&1 | tee "$output"
+status=${PIPESTATUS[0]}
+set -o pipefail
+set -e
+
+if [[ $status -eq 0 ]]; then
+  exit 0
+fi
+
+if ! grep -qF '[unauthenticated]' "$output"; then
+  exit "$status"
+fi
+
+echo "Cursor Agent login expired."
+
+if [[ ! -t 0 ]]; then
+  echo "Run \`cursor-agent login\`, then \`dot update\` again."
+  exit 0
+fi
+
+printf 'Log in now? [y/N] '
+if ! read -r answer; then
+  echo
+  echo "Skipped Cursor Agent update."
+  exit 0
+fi
+
+case "$answer" in
+  y|Y|yes|YES)
+    if ! "$agent" login; then
+      echo "Cursor Agent login did not finish. Skipping its update."
+      exit 0
+    fi
+    "$agent" update
+    ;;
+  *)
+    echo "Skipped Cursor Agent update."
+    exit 0
+    ;;
+esac

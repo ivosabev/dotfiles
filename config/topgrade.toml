@@ -5,6 +5,7 @@
   cleanup = true
   disable = [
     "containers",
+    "cursor_agent",
     "git_repos",
     "node",
     "pnpm",
@@ -17,5 +18,7 @@
   display_time = false
 
 [commands]
+  # Browser sessions expire. Ask before continuing, instead of the built-in step.
+  "Cursor Agent" = "$HOME/.dotfiles/bin/cursor-agent-update"
   "Skills" = 'cd "$HOME" && npx --yes skills update --global'
   "npm" = 'cd "$HOME" && npm update --location global --allow-remote=all'
